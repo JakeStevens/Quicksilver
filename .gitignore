@@ -1,0 +1,15 @@
+#compiled source code#
+#####################
+*.o
+
+#all vsim/hdl/verilog/whatever besides source#
+#############################################
+HDL/analyzed/
+HDL/docs/
+HDL/modelsim.ini
+HDL/mapped/
+HDL/reports/
+HDL/schematic/
+HDL/scripts/
+HDL/transcript
+HDL/work/
