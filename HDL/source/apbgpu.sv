@@ -7,6 +7,7 @@ module apbgpu
     input wire pSel_i,
     input wire pEnable_i,
     input wire pWrite_i,
+    output reg command_o,
     output reg [3:0] opcode_o,
     output reg [24:0] parameters_o
   );
@@ -43,12 +44,14 @@ module apbgpu
   begin: outputLogic
     opcode_o = 0;
     parameters_o = 0;
+    command_o = 0;
     
     case(state)
       ACCESS:
         begin
           if (pSel_i == 1 && pEnable_i == 1 && pWrite_i == 1)
             begin
+              command_o = 1'b1;
               opcode_o = pDataWrite_i[31:28];
               parameters_o = pDataWrite_i[24:0];
             end

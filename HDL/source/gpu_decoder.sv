@@ -5,6 +5,7 @@ module gpu_decoder
   input wire [3:0] opcode_i,
   input wire [24:0] parameters_i,
   input wire finished_i,
+  input wire command_i,
   output wire [9:0] x1_o,
   output wire [8:0] y1_o,
   output wire [9:0] x2_o,
@@ -19,6 +20,7 @@ module gpu_decoder
   reg [9:0] x1_r, x2_r, rad_r, x1_n, x2_n, rad_n;
   reg [8:0] y1_r, y2_r, y1_n, y2_n;
   reg [7:0] r_r, g_r, b_r, r_n, g_n, b_n;
+  reg draw_line_r, draw_line_n;
   
   assign x1_o = x1_r;
   assign x2_o = x2_r;
@@ -28,15 +30,16 @@ module gpu_decoder
   assign r_o = r_r;
   assign g_o = g_r;
   assign b_o = b_r;
+  assign draw_line_o = draw_line_r;
   
-  typedef enum bit[1:0] {IDLE, PARAMS, CMD} stateType;
+  typedef enum bit[1:0] {RESTART, PARAMS, CMD} stateType;
   stateType state, nextstate;
 
   always @ (posedge clk, negedge n_rst)
   begin: nextState
     if (n_rst == 1'b0)
     begin
-      state <= PARAMS;
+      state <= RESTART;
       x1_r <= 0;
       y1_r <= 0;
       x2_r <= 0;
@@ -45,6 +48,7 @@ module gpu_decoder
       r_r <= 0;
       g_r <= 0;
       b_r <= 0;
+      draw_line_r <= 0;
     end
     else
     begin
@@ -57,22 +61,21 @@ module gpu_decoder
       r_r <= r_n;
       g_r <= g_n;
       b_r <= b_n;
+      draw_line_r <= draw_line_n;
     end
   end
   
   always_comb
   begin: nextStateLogic
     nextstate <= state;
-    /*if (state == IDLE)
-      if (opcode_i != 4'b0000)
-        nextstate <= PARAMS
-        */
+    if (state == RESTART)
+      nextstate <= PARAMS;
     if (state == PARAMS)
-      if (opcode_i == 4'b0100)// || opcode == 4'b0101 || opcode == 4'b0110 || opcode == 4'b0111)
+      if (finished_i == 1'b1)// || opcode == 4'b0101 || opcode == 4'b0110 || opcode == 4'b0111)
         nextstate <= CMD;
-    if (state == CMD)
-      if (finished_i == 1'b1)
-        nextstate <= PARAMS;
+    //if (state == CMD)
+      //if (finished_i == 1'b1)
+        //nextstate <= PARAMS;
   end
   
   always_comb
@@ -85,9 +88,11 @@ module gpu_decoder
     r_n = r_r;
     g_n = g_r;
     b_n = b_r;
-    draw_line_o = 0;
+    draw_line_n = draw_line_r;
     
-    case(state)
+    if(command_i == 1'b1)
+    begin
+      case(state)
     /*
       IDLE:
         begin
@@ -107,46 +112,46 @@ module gpu_decoder
           endcase
         end
     */
-      PARAMS:
-        begin
-          case(opcode_i)
-            4'b0000:
-              begin
-                x1_n = 0;
-                x2_n = 0;
-                y1_n = 0;
-                y2_n = 0;
-                rad_n = 0;
-                r_n = 0;
-                g_n = 0;
-                b_n = 0;  
-              end
-            4'b0001:
-              begin
-                //set_xy1
-                x1_n = parameters_i[9:0];
-                y1_n = parameters_i[17:10];
-              end
-            4'b0010:
-              begin
-                //set_xy2
-                x2_n = parameters_i[9:0];
-                y2_n = parameters_i[17:10];
-              end
-            4'b0011:
-              begin
-                //set_radius
-                rad_n = parameters_i[9:0];
-              end
-            4'b0100:
-              begin
-                //draw_line
-                b_n = parameters_i[7:0];
-                g_n = parameters_i[15:8];
-                r_n = parameters_i[23:16];
-                draw_line_o = 1;
-              end
-              /*
+        PARAMS:
+         begin
+            case(opcode_i)
+              4'b0000:
+                begin
+                  x1_n = 0;
+                  x2_n = 0;
+                  y1_n = 0;
+                  y2_n = 0;
+                  rad_n = 0;
+                  r_n = 0;
+                  g_n = 0;
+                  b_n = 0;  
+                end
+              4'b0001:
+                begin
+                  //set_xy1
+                  x1_n = parameters_i[9:0];
+                  y1_n = parameters_i[17:10];
+                end
+              4'b0010:
+                begin
+                  //set_xy2
+                  x2_n = parameters_i[9:0];
+                  y2_n = parameters_i[17:10];
+                end
+              4'b0011:
+                begin
+                  //set_radius
+                  rad_n = parameters_i[9:0];
+                end
+              4'b0100:
+                begin
+                  //draw_line
+                  b_n = parameters_i[7:0];
+                  g_n = parameters_i[15:8];
+                  r_n = parameters_i[23:16];
+                  draw_line_n = 1;
+                end
+                  /*
             4'b0101:
               begin
                 //draw_rect
@@ -160,20 +165,21 @@ module gpu_decoder
                 //draw_arc
               end
               */
-          endcase
-        end
-      CMD:
-        begin
-          x1_n = 0;
-          x2_n = 0;
-          y1_n = 0;
-          y2_n = 0;
-          rad_n = 0;
-          r_n = 0;
-          g_n = 0;
-          b_n = 0;
-          draw_line_o = 0;
-        end
-    endcase
+            endcase
+         end
+        RESTART:
+          begin
+            x1_n = 0;
+            x2_n = 0;
+            y1_n = 0;
+            y2_n = 0;
+            rad_n = 0;
+            r_n = 0;
+            g_n = 0;
+            b_n = 0;
+            draw_line_n = 0;
+          end
+      endcase
+    end
   end
 endmodule
