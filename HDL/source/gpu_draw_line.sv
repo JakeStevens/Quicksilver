@@ -1,38 +1,40 @@
 // $Id: $
 // File name:   gpu_draw_line.sv
 // Created:     10/9/2014
-// Author:      Manik Singhal
+// Author:      Manik Singhal Jacob Stevens Erik Swan
 // Lab Section: 337-04
 // Version:     1.0  Initial Design Entry
 // Description: basic bresenham implementation in verilog
+
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
 
 module gpu_draw_line
   (
   input wire clk,
   input wire n_rst,
-  input wire [9:0] x1,
-  input wire [8:0] y1,
-  input wire [9:0] x2,
-  input wire [8:0] y2,
-  input wire [7:0] r_i,
-  input wire [7:0] g_i,
-  input wire [7:0] b_i,
+  input wire [`WIDTH_BITS-1:0] x1,
+  input wire [`HEIGHT_BITS-1:0] y1,
+  input wire [`WIDTH_BITS-1:0] x2,
+  input wire [`HEIGHT_BITS-1:0] y2,
+  input wire [`CHANNEL_BITS-1:0] r_i,
+  input wire [`CHANNEL_BITS-1:0] g_i,
+  input wire [`CHANNEL_BITS-1:0] b_i,
   input wire start,
   output wire done,
   output wire busy,
-  output wire [9:0] X,
-  output wire [8:0] Y,
-  output wire [7:0] r_o,
-  output wire [7:0] g_o,
-  output wire [7:0] b_o
+  output wire [`WIDTH_BITS-1:0] X,
+  output wire [`HEIGHT_BITS-1:0] Y,
+  output wire [`CHANNEL_BITS-1:0] r_o,
+  output wire [`CHANNEL_BITS-1:0] g_o,
+  output wire [`CHANNEL_BITS-1:0] b_o
   );
   
-  reg signed [11:0] dx, err, e2;
-  reg signed [10:0] dy;
+  reg signed [`WIDTH_BITS+1:0] dx, err, e2;
+  reg signed [`HEIGHT_BITS+1:0] dy;
   reg signed [1:0] sx, sy;
   reg reg_done, reg_busy;
-  reg signed [11:0] rX;
-  reg signed [10:0] rY;
+  reg signed [`WIDTH_BITS-1:0] rX;
+  reg signed [`HEIGHT_BITS-1:0] rY;
   wire start_edge;
   
   assign r_o = r_i;
@@ -58,8 +60,8 @@ module gpu_draw_line
       begin
         reg_done <= 0;
         reg_busy <= 0;
-        rX <= 10'd640;
-        rY <= 9'd480;
+        rX <= `WIDTH_BITS'd`WIDTH;
+        rY <= `HEIGHT'd`HEIGHT;
         e2 <= 0;
       end    
     else
@@ -109,7 +111,9 @@ module gpu_draw_line
                   end
               end
           end
-          
+        /**************************************************************************************************
+        //else reg_done = 0 ===> reg_done will stay high for more than one cycle after wards, it shouldn't!
+        **************************************************************************************************/  
       end
   end
   
