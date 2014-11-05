@@ -1,3 +1,5 @@
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
+
 module gpu
   (
   input wire clk,
@@ -7,19 +9,19 @@ module gpu
   input wire pSel_i,
   input wire pEnable_i,
   input wire pWrite_i,
-  output wire [9:0] x_o,
-  output wire [8:0] y_o,
-  output wire [7:0] r_o,
-  output wire [7:0] g_o,
-  output wire [7:0] b_o
+  output wire [`WIDTH_BITS-1:0] x_o,
+  output wire [`HEIGHT_BITS-1:0] y_o,
+  output wire [`CHANNEL_BITS:0] r_o,
+  output wire [`CHANNEL_BITS:0] g_o,
+  output wire [`CHANNEL_BITS:0] b_o
   );
   
   wire [3:0] opcode_wire;
   wire [24:0] parameters_wire;
   wire finished_wire, draw_line_wire;
-  wire [9:0] x1_wire, x2_wire, rad_wire;
-  wire [8:0] y1_wire, y2_wire;
-  wire [7:0] r_wire, g_wire, b_wire;
+  wire [`WIDTH_BITS-1:0] x1_wire, x2_wire, rad_wire;
+  wire [`HEIGHT_BITS-1:0] y1_wire, y2_wire;
+  wire [`CHANNEL_BITS-1:0] r_wire, g_wire, b_wire;
   wire busy_wire; //not connected as of now
   wire command_wire;
   
