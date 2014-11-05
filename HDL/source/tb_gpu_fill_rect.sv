@@ -1,4 +1,6 @@
 `timescale 1ns / 10 ps
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
+
 module tb_gpu_fill_rect();
   
   //define local parameters
@@ -7,13 +9,13 @@ module tb_gpu_fill_rect();
   //Define DUT ports
   reg tb_clk;
   reg tb_n_rst;
-  reg [9:0] tb_x1_i;
-  reg [8:0] tb_y1_i;
-  reg [9:0] tb_x2_i;
-  reg [8:0] tb_y2_i;
+  reg [`WIDTH_BITS-1:0] tb_x1_i;
+  reg [`HEIGHT_BITS-1:0] tb_y1_i;
+  reg [`WIDTH_BITS-1:0] tb_x2_i;
+  reg [`HEIGHT_BITS-1:0] tb_y2_i;
   reg tb_start_i;
-  reg [9:0] tb_x_o;
-  reg [8:0] tb_y_o;
+  reg [`WIDTH_BITS-1:0] tb_x_o;
+  reg [`HEIGHT_BITS-1:0] tb_y_o;
   reg tb_done;
   reg tb_busy;
   

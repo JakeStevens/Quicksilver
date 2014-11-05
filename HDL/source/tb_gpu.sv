@@ -1,4 +1,6 @@
 `timescale 1ns / 10 ps
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
+
 module tb_gpu();
   //Define Local Parameters
   localparam CLK_PERIOD = 10;
@@ -11,9 +13,9 @@ module tb_gpu();
   reg tb_pSel;
   reg tb_pEnable;
   reg tb_pWrite;
-  reg [9:0] tb_x;
-  reg [8:0] tb_y;
-  reg [7:0] tb_r, tb_g, tb_b;
+  reg [`WIDTH_BITS-1:0] tb_x;
+  reg [`HEIGHT_BITS-1:0] tb_y;
+  reg [`CHANNEL_BITS-1:0] tb_r, tb_g, tb_b;
   
   
   gpu DUT(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
