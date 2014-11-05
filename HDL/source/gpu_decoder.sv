@@ -1,3 +1,5 @@
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
+
 module gpu_decoder
   (
   input wire clk,
@@ -6,20 +8,20 @@ module gpu_decoder
   input wire [24:0] parameters_i,
   input wire finished_i,
   input wire command_i,
-  output wire [9:0] x1_o,
-  output wire [8:0] y1_o,
-  output wire [9:0] x2_o,
-  output wire [8:0] y2_o,
-  output wire [9:0] rad_o,
-  output wire [7:0] r_o,
-  output wire [7:0] g_o,
-  output wire [7:0] b_o,
+  output wire [`WIDTH_BITS-1:0] x1_o,
+  output wire [`HEIGHT_BITS-1:0] y1_o,
+  output wire [`WIDTH_BITS-1:0] x2_o,
+  output wire [`HEIGHT_BITS-1:0] y2_o,
+  output wire [`WIDTH_BITS-1:0] rad_o,
+  output wire [`CHANNEL_BITS-1:0] r_o,
+  output wire [`CHANNEL_BITS-1:0] g_o,
+  output wire [`CHANNEL_BITS-1:0] b_o,
   output reg draw_line_o
   );
   
-  reg [9:0] x1_r, x2_r, rad_r, x1_n, x2_n, rad_n;
-  reg [8:0] y1_r, y2_r, y1_n, y2_n;
-  reg [7:0] r_r, g_r, b_r, r_n, g_n, b_n;
+  reg [`WIDTH_BITS-1:0] x1_r, x2_r, rad_r, x1_n, x2_n, rad_n;
+  reg [`HEIGHT_BITS-1:0] y1_r, y2_r, y1_n, y2_n;
+  reg [`CHANNEL_BITS-1:0] r_r, g_r, b_r, r_n, g_n, b_n;
   reg draw_line_r, draw_line_n;
   
   assign x1_o = x1_r;
@@ -129,26 +131,26 @@ module gpu_decoder
               4'b0001:
                 begin
                   //set_xy1
-                  x1_n = parameters_i[9:0];
-                  y1_n = parameters_i[17:10];
+                  x1_n = parameters_i[`WIDTH_BITS-1:0];
+                  y1_n = parameters_i[`WIDTH_BITS+`HEIGHT_BITS-1:`WIDTH_BITS];
                 end
               4'b0010:
                 begin
                   //set_xy2
-                  x2_n = parameters_i[9:0];
-                  y2_n = parameters_i[17:10];
+                  x2_n = parameters_i[`WIDTH_BITS-1:0];
+                  y2_n = parameters_i[`WIDTH_BITS+`HEIGHT_BITS-1:`WIDTH_BITS];
                 end
               4'b0011:
                 begin
                   //set_radius
-                  rad_n = parameters_i[9:0];
+                  rad_n = parameters_i[`WIDTH_BITS:0];
                 end
               4'b0100:
                 begin
                   //draw_line
-                  b_n = parameters_i[7:0];
-                  g_n = parameters_i[15:8];
-                  r_n = parameters_i[23:16];
+                  b_n = parameters_i[`CHANNEL_BITS-1:0];
+                  g_n = parameters_i[2*`CHANNEL_BITS:`CHANNEL_BITS];
+                  r_n = parameters_i[3*`CHANNEL_BITS-1:2*`CHANNEL_BITS];
                   draw_line_n = 1;
                 end
                   /*
