@@ -1,20 +1,22 @@
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
+
 module gpu_fill_rect
   (
   input wire clk,
   input wire n_rst,
-  input wire [9:0] x1_i,
-  input wire [8:0] y1_i,
-  input wire [9:0] x2_i,
-  input wire [8:0] y2_i,
-  input wire [7:0] r_i,
-  input wire [7:0] g_i,
-  input wire [7:0] b_i,
+  input wire [`WIDTH_BITS-1:0] x1_i,
+  input wire [`HEIGHT_BITS-1:0] y1_i,
+  input wire [`WIDTH_BITS-1:0] x2_i,
+  input wire [`HEIGHT_BITS-1:0] y2_i,
+  input wire [`CHANNEL_BITS-1:0] r_i,
+  input wire [`CHANNEL_BITS-1:0] g_i,
+  input wire [`CHANNEL_BITS-1:0] b_i,
   input wire start_i,
-  output reg [9:0] x_o,
-  output reg [8:0] y_o,
-  output wire [7:0] r_o,
-  output wire [7:0] g_o,
-  output wire [7:0] b_o,
+  output reg [`WIDTH_BITS-1:0] x_o,
+  output reg [`HEIGHT_BITS-1:0] y_o,
+  output wire [`CHANNEL_BITS-1:0] r_o,
+  output wire [`CHANNEL_BITS-1:0] g_o,
+  output wire [`CHANNEL_BITS-1:0] b_o,
   output reg done_o,
   output reg busy_o
   );
@@ -42,12 +44,13 @@ module gpu_fill_rect
         busy_o = 1;
       end
     else if (start_i == 1'b1 && start_edge == 1'b0)
-      if (x_o == x2_i && y_o == y2_i)
+      if ((x_o == x2_i && y_o == y2_i) ||
+           (y_o == `HEIGHT_BITS'd`HEIGHT))
         begin
           done_o = 1;
           busy_o = 0;
         end
-      else if (x_o == x2_i)
+      else if (x_o == x2_i || x_o == `WIDTH_BITS'd`WIDTH)
         begin
           x_o = x1_i;
           y_o = y_o + 1;
