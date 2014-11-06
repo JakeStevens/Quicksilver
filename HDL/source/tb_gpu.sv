@@ -95,7 +95,55 @@ module tb_gpu();
       
       #(CLK_PERIOD);
       
-      #(CLK_PERIOD*25);
+      #(CLK_PERIOD*12);
+      
+      //Set XY2
+      @(posedge tb_clk);
+      #(2);
+      tb_pDataWrite = 32'b00010000000000000001100000000111;
+      tb_pSel = 1'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pEnable = 1'b1;
+      #(CLK_PERIOD);
+      
+      tb_pDataWrite = 1'b0;
+      tb_pSel = 1'b0;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b0;
+      
+      #(CLK_PERIOD);
+      
+      //Set XY2 
+      @(posedge tb_clk);
+      #(2);
+      tb_pDataWrite = 32'b00100000000000000000000000000000;
+      tb_pSel = 1'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pEnable = 1'b1;
+      #(CLK_PERIOD);
+      
+      tb_pDataWrite = 32'b0;
+      tb_pSel = 1'b0;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b0;
+      
+      #(CLK_PERIOD);
+      
+      
+      //Draw line
+      @(posedge tb_clk);
+      #(2);
+      tb_pDataWrite = 32'b01000000101010101011110100111110;
+      tb_pSel = 1'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pEnable = 1'b1;
+      #(CLK_PERIOD);
+      
+      
+      
       
     end
   

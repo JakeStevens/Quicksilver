@@ -74,7 +74,7 @@ module gpu_draw_line
             reg_busy <= 1'b1;
             reg_done <= 1'b0;
           end
-        else if (start == 1'b1 && start_edge == 1'b0)
+        else if (start == 1'b1 && start_edge == 1'b0 && reg_busy == 1'b1)
           begin
             if (rX == x2 && rY == y2)
               begin
@@ -84,7 +84,6 @@ module gpu_draw_line
             else
               begin
                 reg_busy <= 1'b1;
-                //e2 <= err;
                 if ((e2 + dx > (0)) && (e2 < dy))
                   begin
                     e2 <= e2 - dy + dx;
@@ -110,12 +109,9 @@ module gpu_draw_line
                     rX <= rX;
                   end
               end
-          end
+          end 
         else
-          reg_done <= 0;
-        /**************************************************************************************************
-        //else reg_done = 0 ===> reg_done will stay high for more than one cycle after wards, it shouldn't!
-        **************************************************************************************************/  
+          reg_done <= 1'b0;
       end
   end
   
