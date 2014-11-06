@@ -11,9 +11,9 @@ module gpu
   input wire pWrite_i,
   output wire [`WIDTH_BITS-1:0] x_o,
   output wire [`HEIGHT_BITS-1:0] y_o,
-  output wire [`CHANNEL_BITS:0] r_o,
-  output wire [`CHANNEL_BITS:0] g_o,
-  output wire [`CHANNEL_BITS:0] b_o
+  output wire [`CHANNEL_BITS-1:0] r_o,
+  output wire [`CHANNEL_BITS-1:0] g_o,
+  output wire [`CHANNEL_BITS-1:0] b_o
   );
   
   wire [3:0] opcode_wire;

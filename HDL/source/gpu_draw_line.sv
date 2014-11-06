@@ -111,6 +111,8 @@ module gpu_draw_line
                   end
               end
           end
+        else
+          reg_done <= 0;
         /**************************************************************************************************
         //else reg_done = 0 ===> reg_done will stay high for more than one cycle after wards, it shouldn't!
         **************************************************************************************************/  
