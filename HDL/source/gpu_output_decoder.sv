@@ -23,6 +23,11 @@ module gpu_output_decoder
   
   always_comb
   begin
+    x_o = 0;
+    y_o = 0;
+    r_o = 0;
+    g_o = 0;
+    b_o = 0;
     if(line_active == 1'b1)
       begin
         x_o = x_line_i;
