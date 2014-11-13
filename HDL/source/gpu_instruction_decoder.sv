@@ -19,14 +19,6 @@ module gpu_instruction_decoder
   
   always_comb
   begin: outputLogic
-    x1_o = 0;
-    x2_o = 0;
-    y1_o = 0;
-    y2_o = 0;
-    rad_o = 0;
-    r_o = 0;
-    g_o = 0;
-    b_o = 0;
     push_instruction_o = 0;
     write_enable_o = 0;
     if (command_i == 1'b1)
@@ -73,6 +65,19 @@ module gpu_instruction_decoder
               r_o = parameters_i[3*`CHANNEL_BITS-1:2*`CHANNEL_BITS];
               write_enable_o = 1'b1;
               push_instruction_o = 1'b1;
+            end
+          default:
+            begin
+              x1_o = 0;
+              x2_o = 0;
+              y1_o = 0;
+              y2_o = 0;
+              rad_o = 0;
+              r_o = 0;
+              g_o = 0;
+              b_o = 0;
+              push_instruction_o = 0;
+              write_enable_o = 0;
             end
           /*  4'b0110:
               begin
