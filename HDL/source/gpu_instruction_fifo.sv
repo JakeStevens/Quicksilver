@@ -1,4 +1,4 @@
-`include "/home/ecegrid/a/mg137/Quicksilver/HDL/source/gpu_definitions.vh"
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
 
 module gpu_instruction_fifo
   (
@@ -69,7 +69,7 @@ always_comb begin
 end
 
 // Writing to FIFO
-always_ff @ (negedge nrst, posedge clk, input_data) begin
+always_ff @ (negedge nrst, posedge clk) begin
   if (!nrst) begin
     data <= 0;
   end else if(write_enable_i) begin
@@ -82,7 +82,7 @@ always_ff @ (negedge nrst, posedge clk) begin
   if(!nrst) begin
     read_ptr <= 0;
   end else if(pop_instruction_i == 1'b1 && !fifo_empty) begin
-    read_ptr++; // TODO: need to handle rollover manually?
+    read_ptr <= read_ptr + 1; // TODO: need to handle rollover manually?
   end
 end
 
@@ -91,7 +91,7 @@ always_ff @ (negedge nrst, posedge clk) begin
   if(!nrst) begin
     write_ptr <= 0;
   end else if(push_instruction_i == 1'b1 && !fifo_full) begin
-    write_ptr++; // TODO: need to handle rollover manually?
+    write_ptr <= write_ptr + 1; // TODO: need to handle rollover manually?
   end
 end
 
@@ -100,9 +100,9 @@ always_ff @ (negedge nrst, posedge clk) begin
   if(!nrst) begin
     depth_cntr <= 0;
   end else if(push_instruction_i == 1'b1 && !fifo_full) begin // TODO: Move this logic to a simple comb wire that we can reuse
-    depth_cntr++;
+    depth_cntr <= depth_cntr + 1;
   end else if(pop_instruction_i == 1'b1 && !fifo_empty) begin
-    depth_cntr--;
+    depth_cntr <= depth_cntr + 1;
   end
 end
 
