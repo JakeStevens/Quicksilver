@@ -1,4 +1,4 @@
-module apbgpu
+module gpu_apb_interface
   (
     input wire clk,
     input wire n_rst,

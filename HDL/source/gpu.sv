@@ -18,30 +18,24 @@ module gpu
   
   wire [3:0] opcode_wire;
   wire [24:0] parameters_wire;
-  wire finished_wire, draw_line_wire;
   wire [`WIDTH_BITS-1:0] x1_wire, x2_wire, rad_wire;
   wire [`HEIGHT_BITS-1:0] y1_wire, y2_wire;
   wire [`CHANNEL_BITS-1:0] r_wire, g_wire, b_wire;
-  wire busy_wire; //not connected as of now
-  wire command_wire;
+  wire push_wire, w_en_wire;
   
-  apbgpu apb(.clk(clk), .n_rst(n_rst), .pAddr_i(pAddr_i),
-            .pDataWrite_i(pDataWrite_i), .pSel_i(pSel_i),
-            .pEnable_i(pEnable_i), .pWrite_i(pWrite_i),
-            .opcode_o(opcode_wire), .parameters_o(parameters_wire),
-            .command_o(command_wire));
-  
-  gpu_decoder decode(.clk(clk), .n_rst(n_rst), .opcode_i(opcode_wire),
-              .parameters_i(parameters_wire), .finished_i(finished_wire),
-              .x1_o(x1_wire), .x2_o(x2_wire), .y1_o(y1_wire), .y2_o(y2_wire),
-              .rad_o(rad_wire), .r_o(r_wire), .g_o(g_wire), .b_o(b_wire),
-              .draw_line_o(draw_line_wire), .command_i(command_wire));
-              
-  gpu_draw_line line(.clk(clk), .n_rst(n_rst), .x1(x1_wire), .y1(y1_wire),
-                    .x2(x2_wire), .y2(y2_wire), .r_i(r_wire), .g_i(g_wire),
-                    .b_i(b_wire), .start(draw_line_wire), .done(finished_wire),
-                    .busy(busy_wire), .X(x_o), .Y(y_o), .r_o(r_o), .g_o(g_o),
-                    .b_o(b_o));
+  gpu_apb_interface apb(.clk(clk), .n_rst(n_rst), .pAddr_i(pAddr_i),
+                    .pDataWrite_i(pDataWrite_i), .pSel_i(pSel_i),
+                    .pEnable_i(pEnable_i), .pWrite_i(pWrite_i),
+                    .opcode_o(opcode_wire), .parameters_o(parameters_wire),
+                    .command_o(command_wire));
+                  
+  gpu_instruction_decoder inst(.opcode_i(opcode_wire), .parameters_i(parameters_wire),
+                              .command_i(command_wire), .x1_o(x1_wire),
+                              .y1_o(y1_wire), .x2_o(x2_wire), .y2_o(y2_wire),
+                              .r_o(r_wire), .g_o(g_wire), .b_o(b_wire),
+                              .push_instruction_o(push_wire),
+                              .write_enable_o(w_en_wire));
+            
   
   
 endmodule
