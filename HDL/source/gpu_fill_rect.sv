@@ -56,12 +56,25 @@ module gpu_fill_rect
            begin
              x_o = x1_i;
              y_o = y_o + 1;
+             busy_o = 1;
            end
          else
-           x_o = x_o + 1;
+           begin
+            //This will run one clock cycle before we want it to
+            //(before x_o and y_o are set properly)
+            //why?
+            //because start_edge is registered so it is off once cycle
+            //thus, start_i is high and start_edge is not
+            //then start_i and start_edge are both high
+            //then start_i is high and start_edge is not again
+            x_o = x_o + 1;
+            busy_o = 1;
+          end
         else
-          done_o = 0;
-         busy_o = 0;
+          begin
+            done_o = 0;
+            busy_o = 0;
+          end
       end
   end
   
