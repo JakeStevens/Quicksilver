@@ -13,3 +13,7 @@ HDL/schematic/
 HDL/scripts/
 HDL/transcript
 HDL/work/
+HDL/source/*.bak
+HDL/*.log
+HDL/*.mtran
+HDL/*.stran
