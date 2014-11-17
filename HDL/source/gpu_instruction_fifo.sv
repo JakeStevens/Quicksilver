@@ -1,9 +1,9 @@
-`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
+`include "/home/ecegrid/a/mg137/Quicksilver/HDL/source/gpu_definitions.vh"
 
 module gpu_instruction_fifo
   (
   input wire clk,
-  input wire nrst,
+  input wire n_rst,
   input wire [3:0] opcode_i,
   input wire [`WIDTH_BITS-1:0] x1_i,
   input wire [`HEIGHT_BITS-1:0] y1_i,
@@ -17,8 +17,8 @@ module gpu_instruction_fifo
   input wire push_instruction_i,
   input wire write_enable_i,
   input wire pop_instruction_i,
-  output reg fifo_empty,
-  output reg fifo_full,
+  output reg fifo_empty_o,
+  output reg fifo_full_o,
   output reg [3:0] opcode_o,
   output reg [`WIDTH_BITS-1:0] x1_o,
   output reg [`HEIGHT_BITS-1:0] y1_o,
@@ -42,8 +42,6 @@ reg [FIFO_POINTER_BITS-1:0] read_ptr, write_ptr;
 
 reg [FIFO_POINTER_BITS:0] depth_cntr;
 
-// TODO: use two dimensional register instead of a single, 632 bit wide register
-
 // Assign the individual inputs and outputs into larger blocks to make
 // the words easier to work with
 always_comb begin
@@ -64,13 +62,13 @@ always_comb begin
   quad_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+2:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3];
   
   // FIFO flags
-  fifo_empty = (depth_cntr == 0);
-  fifo_full = (depth_cntr == 4'd8);
+  fifo_empty_o = (depth_cntr == 0);
+  fifo_full_o = (depth_cntr == 4'd8);
 end
 
 // Writing to FIFO
-always_ff @ (negedge nrst, posedge clk) begin
-  if (!nrst) begin
+always_ff @ (negedge n_rst, posedge clk) begin
+  if (!n_rst) begin
     data <= 0;
   end else if(write_enable_i) begin
     data[write_ptr][FIFO_MAX_BIT:0] <= input_data;
@@ -78,30 +76,30 @@ always_ff @ (negedge nrst, posedge clk) begin
 end
 
 // Read pointer
-always_ff @ (negedge nrst, posedge clk) begin
-  if(!nrst) begin
+always_ff @ (negedge n_rst, posedge clk) begin
+  if(!n_rst) begin
     read_ptr <= 0;
-  end else if(pop_instruction_i == 1'b1 && !fifo_empty) begin
+  end else if(pop_instruction_i == 1'b1 && !fifo_empty_o) begin
     read_ptr <= read_ptr + 1; // TODO: need to handle rollover manually?
   end
 end
 
 // Write pointer
-always_ff @ (negedge nrst, posedge clk) begin
-  if(!nrst) begin
+always_ff @ (negedge n_rst, posedge clk) begin
+  if(!n_rst) begin
     write_ptr <= 0;
-  end else if(push_instruction_i == 1'b1 && !fifo_full) begin
+  end else if(push_instruction_i == 1'b1 && !fifo_full_o) begin
     write_ptr <= write_ptr + 1; // TODO: need to handle rollover manually?
   end
 end
 
 // Depth counter
-always_ff @ (negedge nrst, posedge clk) begin
-  if(!nrst) begin
+always_ff @ (negedge n_rst, posedge clk) begin
+  if(!n_rst) begin
     depth_cntr <= 0;
-  end else if(push_instruction_i == 1'b1 && !fifo_full) begin // TODO: Move this logic to a simple comb wire that we can reuse
+  end else if(push_instruction_i == 1'b1 && !fifo_full_o) begin // TODO: Move this logic to a simple comb wire that we can reuse
     depth_cntr <= depth_cntr + 1;
-  end else if(pop_instruction_i == 1'b1 && !fifo_empty) begin
+  end else if(pop_instruction_i == 1'b1 && !fifo_empty_o) begin
     depth_cntr <= depth_cntr + 1;
   end
 end
