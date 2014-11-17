@@ -1,4 +1,4 @@
-`include "/home/ecegrid/a/mg137/Quicksilver/HDL/source/gpu_definitions.vh"
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
 `timescale 1 ns / 100 ps
 module tb_gpu_instruction_fifo();
   

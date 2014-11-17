@@ -1,4 +1,4 @@
-`include "/home/ecegrid/a/mg137/Quicksilver/HDL/source/gpu_definitions.vh"
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
 
 module gpu_instruction_fifo
   (
@@ -45,21 +45,21 @@ reg [FIFO_POINTER_BITS:0] depth_cntr;
 // Assign the individual inputs and outputs into larger blocks to make
 // the words easier to work with
 always_comb begin
-  input_data = {opcode_i, x1_i, y1_i, x2_i, y2_i, rad_i, r_i, g_i, b_i, quad_i};
-  
+  //input_data = {opcode_i, x1_i, y1_i, x2_i, y2_i, rad_i, r_i, g_i, b_i, quad_i};
+  input_data = {quad_i, b_i, g_i, r_i, rad_i, y2_i, x2_i, y1_i, x1_i, opcode_i};
   // Reading from FIFO
   output_data = data[read_ptr][FIFO_MAX_BIT:0];
   
-  opcode_o = output_data[3:0];
-  x1_o = output_data[3+`WIDTH_BITS-1:3];
-  y1_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1:`WIDTH_BITS-1+3];
-  x2_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1:`WIDTH_BITS-1+`HEIGHT_BITS-1+3];
-  y2_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+3];
-  rad_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+3];
-  r_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+3];
-  g_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+3];
-  b_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3];
-  quad_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+2:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3];
+  opcode_o = output_data[3:0]; // [3:0]
+  x1_o = output_data[3+`WIDTH_BITS:3+1]; // [13:4]
+  y1_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS+1:`WIDTH_BITS-1+3+2]; //[22:14]
+  x2_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS+2:`WIDTH_BITS-1+`HEIGHT_BITS-1+3+3]; //[32:23]
+  y2_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS+3:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+3+4]; //[41:33]
+  rad_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS+4:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+3+5]; //[51:42]
+  r_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS+5:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+3+6]; //[59:52]
+  g_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS+6:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+3+7]; // [67:60]
+  b_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS+7:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3+8]; //[75:68]
+  quad_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+1+10:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3+9]; //[78:76]
   
   // FIFO flags
   fifo_empty_o = (depth_cntr == 0);
