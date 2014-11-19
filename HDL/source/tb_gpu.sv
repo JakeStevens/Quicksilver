@@ -63,107 +63,14 @@ module tb_gpu();
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b0;
       
-      //SEE DRIVERS FOR HOW BITS ARE SET UP IN DATA WRITE
-      //X IS RIGHTMOST 10 bits, Y IS 9 TO LEFT OF X
       
-      //Set XY1 
       @(posedge tb_clk);
-      #(2);
-      tb_pDataWrite = 32'b00010000000000000000000000000000;
-      tb_pSel = 1'b1;
-      tb_pWrite = 1'b1;
-      #(CLK_PERIOD);
-      tb_pEnable = 1'b1;
-      #(CLK_PERIOD);
       
-      tb_pDataWrite = 32'b0;
-      tb_pSel = 1'b0;
-      tb_pEnable = 1'b0;
-      tb_pWrite = 1'b0;
+      //Paste output from gpu_test_main here
       
-      #(CLK_PERIOD);
-      
-      //Set XY2
-      @(posedge tb_clk);
-      #(2);
-      tb_pDataWrite = 32'b00100000000000101010010011001000;
-      tb_pSel = 1'b1;
-      tb_pWrite = 1'b1;
-      #(CLK_PERIOD);
-      tb_pEnable = 1'b1;
-      #(CLK_PERIOD);
-      
-      tb_pDataWrite = 1'b0;
-      tb_pSel = 1'b0;
-      tb_pEnable = 1'b0;
-      tb_pWrite = 1'b0;
-      
-      #(CLK_PERIOD);
-      
-      //Draw line
-      @(posedge tb_clk);
-      #(2);
-      tb_pDataWrite = 32'b01000000101010101011110100111110;
-      tb_pSel = 1'b1;
-      tb_pWrite = 1'b1;
-      #(CLK_PERIOD);
-      tb_pEnable = 1'b1;
-      #(CLK_PERIOD);
-      
-      tb_pDataWrite = 32'b0;
-      tb_pSel = 1'b0;
-      tb_pEnable = 1'b0;
-      tb_pWrite = 1'b0;
-      
-      #(CLK_PERIOD);
-      
-      
-      //Set XY1
-      @(posedge tb_clk);
-      #(2);
-      tb_pDataWrite = 32'b00010000000000101010010011001000;
-      tb_pSel = 1'b1;
-      tb_pWrite = 1'b1;
-      #(CLK_PERIOD);
-      tb_pEnable = 1'b1;
-      #(CLK_PERIOD);
-      
-      tb_pDataWrite = 1'b0;
-      tb_pSel = 1'b0;
-      tb_pEnable = 1'b0;
-      tb_pWrite = 1'b0;
-      
-      #(CLK_PERIOD);
-      
-      //Set XY2 
-      @(posedge tb_clk);
-      #(2);
-      tb_pDataWrite = 32'b00100000000000111100000000000000;
-      tb_pSel = 1'b1;
-      tb_pWrite = 1'b1;
-      #(CLK_PERIOD);
-      tb_pEnable = 1'b1;
-      #(CLK_PERIOD);
-      
-      tb_pDataWrite = 32'b0;
-      tb_pSel = 1'b0;
-      tb_pEnable = 1'b0;
-      tb_pWrite = 1'b0;
-      
-      #(CLK_PERIOD);
-      
-      
-      //Draw line
-      @(posedge tb_clk);
-      #(2);
-      tb_pDataWrite = 32'b01000000101010101011110100111110;
-      tb_pSel = 1'b1;
-      tb_pWrite = 1'b1;
-      #(CLK_PERIOD);
-      tb_pEnable = 1'b1;
-      #(CLK_PERIOD);
-      
-      #(CLK_PERIOD * 10000);
+      //Update this based on how many items are drawn
+      //Basically, everything must be drawn before you close
+      #(CLK_PERIOD * 1000);
       $fclose(File);
       $display("File closed");
     end

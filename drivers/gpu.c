@@ -59,7 +59,15 @@ void GPUFlush(void)
 inline void GPUIssueInstruction(uint32_t inst)
 {
 //    GPU = inst; //Write to address corresponding to GPU
-    printf("Instruction is %x\n", inst);
+printf("      tb_pDataWrite = 32'h%x;\n", inst);
+printf("      tb_pSel = 1'b1;\n");
+printf("      tb_pEnable = 0'b1;\n");
+printf("      tb_pWrite = 1'b1;\n");
+printf("      #(CLK_PERIOD);\n");
+printf("      tb_pSel = 1'b1;\n");
+printf("      tb_pEnable = 1'b0;\n");
+printf("      tb_pWrite = 1'b1;\n");
+printf("      #(CLK_PERIOD);\n");
 }
 
 
