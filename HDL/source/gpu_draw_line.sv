@@ -25,7 +25,7 @@ module gpu_draw_line
   output wire done,
   output wire busy,
   output wire [`WIDTH_BITS-1:0] X,
-  output wire [`HEIGHT_BITS-1:0] Y,
+  output wire [`HEIGHT_BITS-1:0] Y
   /*
   output wire [`CHANNEL_BITS-1:0] r_o,
   output wire [`CHANNEL_BITS-1:0] g_o,

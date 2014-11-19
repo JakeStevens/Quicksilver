@@ -16,11 +16,13 @@ module tb_gpu();
   reg [`WIDTH_BITS-1:0] tb_x;
   reg [`HEIGHT_BITS-1:0] tb_y;
   reg [`CHANNEL_BITS-1:0] tb_r, tb_g, tb_b;
+  integer File;
   
   
   gpu DUT(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
               .pSel_i(tb_pSel), .pEnable_i(tb_pEnable), .pWrite_i(tb_pWrite),
-              .x_o(tb_x), .y_o(tb_y), .r_o(tb_r), .g_o(tb_g), .b_o(tb_b));
+              .x_o(tb_x), .y_o(tb_y), .r_o(tb_r), .g_o(tb_g), .b_o(tb_b),
+              .data_avail(tb_busy));
               
     always
     begin
@@ -30,8 +32,26 @@ module tb_gpu();
       #(CLK_PERIOD/2.0);
     end
     
+    always
+    begin
+      @ (posedge tb_clk);
+      if(tb_busy == 1'b1)
+        begin
+          if (File)
+            begin
+              $fdisplay(File, "%d,%d,%d,%d,%d", tb_x, tb_y, tb_r, tb_g, tb_b);
+              $display("%d,%d,%d,%d,%d", tb_x, tb_y, tb_r, tb_g, tb_b);
+            end
+          end
+    end
+    
     initial
     begin
+      File = $fopen("/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/tb_output.txt");
+        if (!File)
+          $display("file not opened");
+        else
+          $display("File opened");
       tb_n_rst = 1'b1;
       tb_n_rst = 1'b0;
       #(CLK_PERIOD);
@@ -43,6 +63,8 @@ module tb_gpu();
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b0;
       
+      //SEE DRIVERS FOR HOW BITS ARE SET UP IN DATA WRITE
+      //X IS RIGHTMOST 10 bits, Y IS 9 TO LEFT OF X
       
       //Set XY1 
       @(posedge tb_clk);
@@ -64,7 +86,7 @@ module tb_gpu();
       //Set XY2
       @(posedge tb_clk);
       #(2);
-      tb_pDataWrite = 32'b00100000000000000001100000000111;
+      tb_pDataWrite = 32'b00100000000000101010010011001000;
       tb_pSel = 1'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
@@ -95,12 +117,11 @@ module tb_gpu();
       
       #(CLK_PERIOD);
       
-      #(CLK_PERIOD*12);
       
-      //Set XY2
+      //Set XY1
       @(posedge tb_clk);
       #(2);
-      tb_pDataWrite = 32'b00010000000000000001100000000111;
+      tb_pDataWrite = 32'b00010000000000101010010011001000;
       tb_pSel = 1'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
@@ -117,7 +138,7 @@ module tb_gpu();
       //Set XY2 
       @(posedge tb_clk);
       #(2);
-      tb_pDataWrite = 32'b00100000000000000000000000000000;
+      tb_pDataWrite = 32'b00100000000000111100000000000000;
       tb_pSel = 1'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
@@ -142,9 +163,9 @@ module tb_gpu();
       tb_pEnable = 1'b1;
       #(CLK_PERIOD);
       
-      
-      
-      
+      #(CLK_PERIOD * 10000);
+      $fclose(File);
+      $display("File closed");
     end
   
   
