@@ -8,22 +8,28 @@ module gpu_fill_rect
   input wire [`HEIGHT_BITS-1:0] y1_i,
   input wire [`WIDTH_BITS-1:0] x2_i,
   input wire [`HEIGHT_BITS-1:0] y2_i,
+  /*
   input wire [`CHANNEL_BITS-1:0] r_i,
   input wire [`CHANNEL_BITS-1:0] g_i,
   input wire [`CHANNEL_BITS-1:0] b_i,
+  */
   input wire start_i,
   output reg [`WIDTH_BITS-1:0] x_o,
   output reg [`HEIGHT_BITS-1:0] y_o,
+  /*
   output wire [`CHANNEL_BITS-1:0] r_o,
   output wire [`CHANNEL_BITS-1:0] g_o,
   output wire [`CHANNEL_BITS-1:0] b_o,
+  */
   output reg done_o,
   output reg busy_o
   );
   
+  /*
   assign r_o = r_i;
   assign g_o = g_i;
   assign b_o = b_i;
+  */
   
   wire start_edge;
   

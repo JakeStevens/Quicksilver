@@ -21,18 +21,22 @@ module gpu_controller
   output reg [`WIDTH_BITS-1:0] x2_line_o,
   output reg [`HEIGHT_BITS-1:0] y2_line_o,
   output reg [`WIDTH_BITS-1:0] rad_line_o,
+  /*
   output reg [`CHANNEL_BITS-1:0] r_line_o,
   output reg [`CHANNEL_BITS-1:0] g_line_o,
   output reg [`CHANNEL_BITS-1:0] b_line_o,
+  */
   output reg run_line_o,
   output reg [`WIDTH_BITS-1:0] x1_fill_o,
   output reg [`HEIGHT_BITS-1:0] y1_fill_o,
   output reg [`WIDTH_BITS-1:0] x2_fill_o,
   output reg [`HEIGHT_BITS-1:0] y2_fill_o,
   output reg [`WIDTH_BITS-1:0] rad_fill_o,
+  /*
   output reg [`CHANNEL_BITS-1:0] r_fill_o,
   output reg [`CHANNEL_BITS-1:0] g_fill_o,
   output reg [`CHANNEL_BITS-1:0] b_fill_o,
+  */
   output reg run_fill_o,
   output reg read_en_o,
   output reg pop_o
@@ -84,18 +88,22 @@ module gpu_controller
     x2_line_o = 0;
     y2_line_o = 0;
     //rad_line_o = 0;
+    /*
     r_line_o = 0;
     g_line_o = 0;
     b_line_o = 0;
+    */
     run_line_o = 0;
     x1_fill_o = 0;
     y1_fill_o = 0;
     x2_fill_o = 0;
     y2_fill_o = 0;
     rad_fill_o = 0;
+    /*
     r_fill_o = 0;
     g_fill_o = 0;
     b_fill_o = 0;
+    */
     run_fill_o = 0;
     read_en_o = 0;
     //state only changes when an instruction is being processed
@@ -110,9 +118,11 @@ module gpu_controller
     	       x2_line_o = x2_i;
     	       y2_line_o = y2_i;
     	       //rad_line_o = 0;
+    	       /*
     	       r_line_o = r_i;
     	       g_line_o = g_i;
     	       b_line_o = b_i;
+    	       */
     	       run_line_o = 1'b1;
 	         end
         4'b0101:
@@ -122,9 +132,11 @@ module gpu_controller
 	         y1_fill_o = y1_i;
 	         x2_fill_o = x2_i;
 	         y2_fill_o = y2_i;
+	         /*
 	         r_line_o = r_i;
 	         g_line_o = g_i;
 	         b_line_o = b_i;
+	         */
 	         run_fill_o = 1'b1;
 	       end
         endcase
