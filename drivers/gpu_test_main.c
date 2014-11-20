@@ -2,7 +2,7 @@
 
 int main(void)
 {
-    GPUDrawFilledRect(0,0,20,20,255,255,255);
+    //GPUDrawFilledRect(0,0,20,20,255,255,255);
     GPUDrawLine(150, 180, 60, 60, 50, 90, 180);
     GPUDrawLine(60, 60, 150, 180, 50, 90, 180);
     GPUDrawLine(120, 120, 120, 200, 60, 70, 90);
