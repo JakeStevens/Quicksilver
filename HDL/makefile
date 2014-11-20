@@ -16,12 +16,13 @@ include /home/ecegrid/a/ece337/Course_Prod/course_make_vars
 # (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS
 # AND THE AUTOMATED GRADING SYSTEM
-COMPONENT_FILES	:= gpu_decoder.sv apbgpu.sv gpu_draw_line.sv rise_edge_detect.sv
-
+COMPONENT_FILES	:= gpu_output_decoder.sv gpu_apb_interface.sv gpu_draw_line.sv 
+COMPONENT_FILES += rise_edge_detect.sv gpu_instruction_decoder.sv
+COMPONENT_FILES += gpu_instruction_fifo.sv gpu_controller.sv gpu_fill_rect.sv
 # Specify the name of the top level file (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS
 # AND THE AUTOMATED GRADING SYSTEM
-TOP_LEVEL_FILE	:= gpu.sv 
+TOP_LEVEL_FILE	:= gpu.sv
 
 # Specify the filepath of the test bench you want to use (ie. tb_top_level.sv)
 # (do not include the source folder in the name)
@@ -217,7 +218,7 @@ mapped_tb_%.sv: source/tb_%.sv $(M_WORK_LIB)
 # Simulation Targets
 ##############################################################################
 define CONSOLE_SIM_CMDS
-"run 15 us;	\
+"run 10 us;	\
  quit -f"
 endef
 
@@ -245,7 +246,7 @@ sim_full_mapped: $(addprefix $(M_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST
 # Uncomment below if you want to just run the simulation as a console command
 # using the commands listed in the CONSOLE_SIM_CMDS definition above instead of 
 # .do file and have the transcript contents to be saved to a file
-#	@$(SIMULATE) -c -t ps -do $(CONSOLE_SIM_CMDS) $(M_WORK_LIB).$(TB_MODULE) > mapped.tran
+	@$(SIMULATE) -c -t ps -do $(CONSOLE_SIM_CMDS) $(M_WORK_LIB).$(TB_MODULE) > mapped.tran
 
 # Uncomment below if you want run the simulation the normal way and have it
 # run the specified .do file
@@ -253,9 +254,9 @@ sim_full_mapped: $(addprefix $(M_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST
 
 # This way just runs it like normal and only sets up the simulation but doesn't
 # run it or add any waveforms
-	@$(SIMULATE) -i -t ps $(M_WORK_LIB).$(TB_MODULE)
-	@cp -f transcript $(basename $(TOP_LEVEL_FILE)).mtran
-	@echo -e "Done simulating the mapped design\n\n"
+#	@$(SIMULATE) -i -t ps $(M_WORK_LIB).$(TB_MODULE)
+#	@cp -f transcript $(basename $(TOP_LEVEL_FILE)).mtran
+#	@echo -e "Done simulating the mapped design\n\n"
 
 # Define a pattern rule for simulating the source version of individual files	without a testbench
 sim_%_source: $(S_WORK_LIB)/%
