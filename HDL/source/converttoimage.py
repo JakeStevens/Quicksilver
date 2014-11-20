@@ -1,4 +1,4 @@
-#! /usr/bin/env python3.4
+#! /usr/bin/env python3
 from PIL import Image
 
 def getframebuffer_sv():

@@ -1,4 +1,4 @@
-#! /usr/bin/env python3.4
+#! /usr/bin/env python3
 
 import subprocess
 import re
@@ -22,16 +22,23 @@ def importsvfromfile():
     outFile.write(tb_lines)
     outFile.close()
 
-print("Compiling driver code...")
-subprocess.call(["gcc", "gpu_test_main.c"])
-subprocess.call(["rm", "sim.out"])
-print("Generating SystemVerilog code from driver...")
-subprocess.call(["a.out"])
-print("Importing the code into preexisting testbench...")
-importsvfromfile()
-print("Running testbench...")
-subprocess.call(["make", "-C", "../HDL/", "clean", "sim_full_mapped"])
-print("Converting to an image...")
-subprocess.call(["../HDL/source/converttoimage.py"])
-print("Displaying image...")
-subprocess.call(["eog", "img.jpg"])
+def compile_and_run():
+    print("Compiling driver code...")
+    err = subprocess.call(["gcc", "gpu_test_main.c"])
+    if err == 1:
+        print("Compile Error. Run aborted...")
+        return
+    subprocess.call(["rm", "sim.out"])
+    print("Generating SystemVerilog code from driver...")
+    subprocess.call(["a.out"])
+    print("Importing the code into preexisting testbench...")
+    importsvfromfile()
+    print("Running testbench...")
+    subprocess.call(["make", "-C", "../HDL/", "clean", "sim_full_mapped"])
+    print("Converting to an image...")
+    subprocess.call(["../HDL/source/converttoimage.py"])
+    print("Displaying image...")
+    subprocess.call(["eog", "img.jpg"])
+
+if __name__ == "__main__":
+    compile_and_run()    
