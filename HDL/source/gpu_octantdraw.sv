@@ -51,8 +51,6 @@ module gpu_octantdraw
       begin
         reg_done <= 0;
         reg_busy <= 0;
-        rX <= `WIDTH_BITS'd`WIDTH;
-        rY <= `HEIGHT'd`HEIGHT;
       end
     else
       begin
@@ -92,6 +90,8 @@ module gpu_octantdraw
   
   always @(trX, trY)
   begin
+    rX <= `WIDTH_BITS'd`WIDTH;
+    rY <= `HEIGHT'd`HEIGHT;
     if (oct == 3'b000) begin
       rX <= xC + trY;
       rY <= yC + trX;
