@@ -1,4 +1,4 @@
-`include "gpu_definitions.vh"
+`include "source/gpu_definitions.vh"
 
 
 module gpu_octantdraw
@@ -69,46 +69,6 @@ module gpu_octantdraw
               end
             else
               begin
-                                 
-                if (oct == 3'b000) begin
-                  rX <= xC + trY;
-                  rY <= yC + trX;
-                  end
-                else if (oct == 3'b001)
-                  begin
-                  rX <= xC + trX;
-                  rY <= yC + trY;
-                  end            
-                else if (oct == 3'b010)
-                  begin
-                  rX <= xC - trX;
-                  rY <= yC + trY;
-                  end
-                else if (oct == 3'b011)
-                  begin
-                  rX <= xC - trY;
-                  rY <= yC + trX;
-                  end
-                else if (oct == 3'b100)
-                  begin
-                  rX <= xC - trY;
-                  rY <= yC - trX;
-                  end
-                else if (oct == 3'b101)
-                  begin
-                  rX <= xC - trX;
-                  rY <= yC - trY;
-                  end
-                else if (oct == 3'b110)
-                  begin
-                  rX <= xC + trX;
-                  rY <= yC - trY;
-                  end
-                else if (oct == 3'b111)
-                  begin
-                  rX <= xC + trY;
-                  rY <= yC - trX;
-                  end  
                 if ((Fcontrol < 0))
                   begin
                     Fcontrol <= Fcontrol + (trX << 1) + 3;
@@ -124,6 +84,49 @@ module gpu_octantdraw
       end
   end
   
+  always @(trX, trY)
+  begin
+    if (oct == 3'b000) begin
+      rX <= xC + trY;
+      rY <= yC + trX;
+      end
+    else if (oct == 3'b001)
+      begin
+       rX <= xC + trX;
+       rY <= yC + trY;
+      end            
+    else if (oct == 3'b010)
+      begin
+        rX <= xC - trX;
+        rY <= yC + trY;
+      end
+    else if (oct == 3'b011)
+      begin
+         rX <= xC - trY;
+         rY <= yC + trX;
+      end
+    else if (oct == 3'b100)
+      begin
+          rX <= xC - trY;
+          rY <= yC - trX;
+      end
+    else if (oct == 3'b101)
+      begin
+          rX <= xC - trX;
+          rY <= yC - trY;
+      end
+    else if (oct == 3'b110)
+      begin
+        rX <= xC + trX;
+        rY <= yC - trY;
+      end
+    else if (oct == 3'b111)
+      begin
+        rX <= xC + trY;
+        rY <= yC - trX;
+      end 
+  end 
+    
   
 endmodule
         
