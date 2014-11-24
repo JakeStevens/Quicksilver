@@ -22,3 +22,14 @@
 `ifndef CHANNEL_BITS
   `define CHANNEL_BITS 8
 `endif
+
+//Define the number of bits used for the X+Y coord (log2 of HEIGHT*Width)
+`ifndef SUM_BITS
+  `define SUM_BITS 19 //(HEIGHT_BITS + WIDTH_BITS)
+`endif
+
+//Define the number of bits used for the X*Y offset (log2 of HEIGHT*Width)
+`ifndef OFFSETMEM
+  `define OFFSETMEM 307200 //(HEIGHT*WIDTH)
+`endif
+

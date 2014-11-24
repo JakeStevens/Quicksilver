@@ -1,4 +1,4 @@
-`include "source/gpu_definitions.vh"
+`include "/home/ecegrid/a/mg118/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
 
 module gpu_instruction_decoder
   (
