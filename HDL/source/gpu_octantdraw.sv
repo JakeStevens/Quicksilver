@@ -8,18 +8,22 @@ module gpu_octantdraw
   input wire [`WIDTH_BITS - 1:0] xC,
   input wire [`HEIGHT_BITS - 1:0] yC,
   input wire [`WIDTH_BITS -1:0] rad,
+  /*
   input wire [`CHANNEL_BITS - 1:0] r_i,
   input wire [`CHANNEL_BITS - 1:0] g_i,
   input wire [`CHANNEL_BITS - 1:0] b_i,
+  */
   input wire [2:0] oct,
   input wire start,
-  output wire done,
-  output wire busy,
+  output wire done_o,
+  output wire busy_o,
   output wire [`WIDTH_BITS - 1:0] X,
-  output wire [`HEIGHT_BITS - 1:0] Y,
+  output wire [`HEIGHT_BITS - 1:0] Y
+  /*
   output wire [`CHANNEL_BITS-1:0] r_o,
   output wire [`CHANNEL_BITS-1:0] g_o,
   output wire [`CHANNEL_BITS-1:0] b_o
+  */
   );
   
   reg signed [`WIDTH_BITS+1:0] Fcontrol;
@@ -29,13 +33,15 @@ module gpu_octantdraw
   
   reg [`WIDTH_BITS - 1:0] rX, rY, trX, trY;//as ry starts from radius
   
+  /*
   assign r_o = r_i;
   assign g_o = g_i;
   assign b_o = b_i;
+  */
   assign X = rX;
   assign Y = rY;
-  assign busy = reg_busy;
-  assign done = reg_done;
+  assign busy_o = reg_busy;
+  assign done_o = reg_done;
   
   rise_edge_detect rise(.clk(clk),.n_rst(n_rst),.data_i(start),.rising_edge_found(start_edge));
   

@@ -40,46 +40,40 @@ module gpu_fill_rect
   begin
     if (n_rst == 1'b0)
       begin
-        done_o = 0;
-        busy_o = 0;
+        done_o <= 0;
+        busy_o <= 0;
       end
     else
       begin
         if (start_edge == 1'b1)
           begin
-            x_o = x1_i;
-            y_o = y1_i;
-            busy_o = 1;
+            x_o <= x1_i;
+            y_o <= y1_i;
+            busy_o <= 1;
           end
         else if (start_i == 1'b1 && start_edge == 1'b0)
           if ((x_o == x2_i && y_o == y2_i) ||
               (y_o == `HEIGHT_BITS'd`HEIGHT))
             begin
-             done_o = 1;
-              busy_o = 0;
+             done_o <= 1;
+              busy_o <= 0;
             end
           else if (x_o == x2_i || x_o == `WIDTH_BITS'd`WIDTH)
            begin
-             x_o = x1_i;
-             y_o = y_o + 1;
-             busy_o = 1;
+             x_o <= x1_i;
+             y_o <= y_o + 1;
+             busy_o <= 1;
            end
          else
            begin
-            //This will run one clock cycle before we want it to
-            //(before x_o and y_o are set properly)
-            //why?
-            //because start_edge is registered so it is off once cycle
-            //thus, start_i is high and start_edge is not
-            //then start_i and start_edge are both high
-            //then start_i is high and start_edge is not again
-            x_o = x_o + 1;
-            busy_o = 1;
+            x_o <= x_o + 1;
+            y_o <= y_o;
+            busy_o <= 1;
           end
         else
           begin
-            done_o = 0;
-            busy_o = 0;
+            done_o <= 0;
+            busy_o <= 0;
           end
       end
   end

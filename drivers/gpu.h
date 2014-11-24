@@ -34,7 +34,7 @@
 #define GPU_POS_B 0
 #define GPU_POS_Y DISP_X_WIDTH
 #define GPU_POS_X 0
-#define GPU_POS_LR (GPU_R_WIDTH + GPU_G_WIDTH + GPU_B_WIDTH)
+#define GPU_POS_OCT (GPU_R_WIDTH + GPU_G_WIDTH + GPU_B_WIDTH)
 #define GPU_POS_RAD 0
 
 //Instruction Macros
@@ -45,7 +45,7 @@
 #define GPU_INST_COLOR(r,g,b) (GPU_INST_PARAM(r, GPU_POS_R) | \
                                GPU_INST_PARAM(g, GPU_POS_G) | \
                                GPU_INST_PARAM(b, GPU_POS_B))
-#define GPU_INST_ARC(lr,r,g,b) (GPU_INST_PARAM(lr, GPU_POS_LR) | \
+#define GPU_INST_ARC(oct,r,g,b) (GPU_INST_PARAM(oct, GPU_POS_OCT) | \
                                 GPU_INST_PARAM(r, GPU_POS_R) | \
                                 GPU_INST_PARAM(g, GPU_POS_G) | \
                                 GPU_INST_PARAM(b, GPU_POS_B))

@@ -43,12 +43,12 @@ void GPUDrawCircle(uint16_t radius, uint16_t x, uint16_t y,
     GPUIssueInstruction(GPU_INST(GPU_CMD_DRAWCIRCLE, GPU_INST_COLOR(r,g,b)));
 }
 
-void GPUDrawArc(uint16_t radius, uint16_t x, uint16_t y, uint16_t lr_flag,
+void GPUDrawArc(uint16_t radius, uint16_t x, uint16_t y, uint16_t oct,
                 uint8_t r, uint8_t g, uint8_t b)
 {
     GPUSetRad(radius);
-    GPUSetXY1(x, y);
-    GPUIssueInstruction(GPU_INST(GPU_CMD_DRAWARC, GPU_INST_ARC(lr_flag, r,g,b)));
+    GPUSetXY2(x, y);
+    GPUIssueInstruction(GPU_INST(GPU_CMD_DRAWARC, GPU_INST_ARC(oct, r,g,b)));
 }
 
 void GPUFlush(void)

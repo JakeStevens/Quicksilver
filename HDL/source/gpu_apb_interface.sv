@@ -9,7 +9,7 @@ module gpu_apb_interface
     input wire pWrite_i,
     output reg command_o,
     output reg [3:0] opcode_o,
-    output reg [24:0] parameters_o
+    output reg [27:0] parameters_o
   );
   
   typedef enum bit {SETUP, ACCESS} stateType;
@@ -53,7 +53,7 @@ module gpu_apb_interface
             begin
               command_o = 1'b1;
               opcode_o = pDataWrite_i[31:28];
-              parameters_o = pDataWrite_i[24:0];
+              parameters_o = pDataWrite_i[27:0];
             end
         end
     endcase

@@ -13,7 +13,7 @@ module gpu_instruction_fifo
   input wire [`CHANNEL_BITS-1:0] r_i,
   input wire [`CHANNEL_BITS-1:0] g_i,
   input wire [`CHANNEL_BITS-1:0] b_i,
-  input wire [2:0] quad_i,
+  input wire [2:0] oct_i,
   input wire push_instruction_i,
   input wire write_enable_i,
   input wire pop_instruction_i,
@@ -28,7 +28,7 @@ module gpu_instruction_fifo
   output reg [`CHANNEL_BITS-1:0] r_o,
   output reg [`CHANNEL_BITS-1:0] g_o,
   output reg [`CHANNEL_BITS-1:0] b_o,
-  output reg [2:0] quad_o
+  output reg [2:0] oct_o
   );
   
 localparam FIFO_WIDTH = 79;
@@ -45,8 +45,7 @@ reg [FIFO_POINTER_BITS:0] depth_cntr;
 // Assign the individual inputs and outputs into larger blocks to make
 // the words easier to work with
 always_comb begin
-  //input_data = {opcode_i, x1_i, y1_i, x2_i, y2_i, rad_i, r_i, g_i, b_i, quad_i};
-  input_data = {quad_i, b_i, g_i, r_i, rad_i, y2_i, x2_i, y1_i, x1_i, opcode_i};
+  input_data = {oct_i, b_i, g_i, r_i, rad_i, y2_i, x2_i, y1_i, x1_i, opcode_i};
   // Reading from FIFO
   output_data = data[read_ptr][FIFO_MAX_BIT:0];
   
@@ -59,7 +58,7 @@ always_comb begin
   r_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS+5:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+3+6]; //[59:52]
   g_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS+6:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+3+7]; // [67:60]
   b_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS+7:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3+8]; //[75:68]
-  quad_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+1+10:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3+9]; //[78:76]
+  oct_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+1+10:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3+9]; //[78:76]
   
   // FIFO flags
   fifo_empty_o = (depth_cntr == 0);

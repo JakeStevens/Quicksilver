@@ -1,5 +1,5 @@
 `timescale 1ns / 10 ps
-`include "source/gpu_definitions.vh"
+`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
 
 module tb_gpu_fill_rect();
   
@@ -42,7 +42,7 @@ module tb_gpu_fill_rect();
       begin
         if (File)
           begin
-            $fdisplay(File, "%d,%d", tb_x_o, tb_y_o);
+            $fdisplay(File, "%d,%d", tb_x_o, tb_y_o,);
             $display("%d,%d", tb_x_o, tb_y_o);
           end
       end
@@ -50,7 +50,7 @@ module tb_gpu_fill_rect();
   
   initial
   begin
-    File = $fopen("/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/tb_output.txt");
+    File = $fopen("/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/tb_fill_output.txt");
     if (!File)
       $display("file not opened");
     else
@@ -63,13 +63,13 @@ module tb_gpu_fill_rect();
     
     tb_x1_i = 0;
     tb_y1_i = 0;
-    tb_x2_i = `WIDTH_BITS'd200;
-    tb_y2_i = `HEIGHT_BITS'd150;
+    tb_x2_i = `WIDTH_BITS'd5;
+    tb_y2_i = `HEIGHT_BITS'd6;
     #(CLK_PERIOD);
     
     tb_start_i = 1;
     
-    #(CLK_PERIOD * 100000 + 20);
+    #(CLK_PERIOD * 50);
     
     $fclose(File);
     $display("File closed");
