@@ -1,5 +1,5 @@
 `timescale 1 ns / 100 ps
-`include "/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
+`include "source/gpu_definitions.vh"
 
 module tb_gpu_output_decoder();
 
