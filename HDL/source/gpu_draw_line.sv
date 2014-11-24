@@ -6,7 +6,7 @@
 // Version:     1.0  Initial Design Entry
 // Description: basic bresenham implementation in verilog
 
-`include "/home/ecegrid/a/mg118/ece337/Quicksilver/HDL/source/gpu_definitions.vh"
+`include "source/gpu_definitions.vh"
 
 module gpu_draw_line
   (
