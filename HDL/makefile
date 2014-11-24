@@ -246,7 +246,7 @@ sim_full_mapped: $(addprefix $(M_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST
 # Uncomment below if you want to just run the simulation as a console command
 # using the commands listed in the CONSOLE_SIM_CMDS definition above instead of 
 # .do file and have the transcript contents to be saved to a file
-	@$(SIMULATE) -c -t ps -do $(CONSOLE_SIM_CMDS) $(M_WORK_LIB).$(TB_MODULE) > mapped.tran
+#	@$(SIMULATE) -c -t ps -do $(CONSOLE_SIM_CMDS) $(M_WORK_LIB).$(TB_MODULE) > mapped.tran
 
 # Uncomment below if you want run the simulation the normal way and have it
 # run the specified .do file
@@ -254,9 +254,9 @@ sim_full_mapped: $(addprefix $(M_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST
 
 # This way just runs it like normal and only sets up the simulation but doesn't
 # run it or add any waveforms
-#	@$(SIMULATE) -i -t ps $(M_WORK_LIB).$(TB_MODULE)
-#	@cp -f transcript $(basename $(TOP_LEVEL_FILE)).mtran
-#	@echo -e "Done simulating the mapped design\n\n"
+	@$(SIMULATE) -i -t ps $(M_WORK_LIB).$(TB_MODULE)
+	@cp -f transcript $(basename $(TOP_LEVEL_FILE)).mtran
+	@echo -e "Done simulating the mapped design\n\n"
 
 # Define a pattern rule for simulating the source version of individual files	without a testbench
 sim_%_source: $(S_WORK_LIB)/%
