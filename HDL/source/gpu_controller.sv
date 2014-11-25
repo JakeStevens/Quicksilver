@@ -16,6 +16,7 @@ module gpu_controller
   input wire [2:0] oct_i,
   input wire finished_line_i,
   input wire finished_fill_i,
+  input wire finished_arc_i,
   input wire fifo_empty_i,
   
   output reg [`CHANNEL_BITS-1:0] r_o,
@@ -85,7 +86,7 @@ module gpu_controller
         end
       1'b1:
         begin
-          if(finished_line_i == 1'b1 || finished_fill_i == 1'b1)
+          if(finished_line_i == 1'b1 || finished_fill_i == 1'b1 || finished_arc_i == 1'b1)
 	           begin
 	             pop_o = 1;
 	             nextstate = 0;

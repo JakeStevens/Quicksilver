@@ -87,6 +87,7 @@ module gpu
                             .rad_i(rad_o_wire), .oct_i(oct_o_wire),
                             .finished_line_i(finished_line_wire),
                             .finished_fill_i(finished_fill_wire),
+                            .finished_arc_i(finished_arc_wire),
                             .fifo_empty_i(empty_wire), 
                             
                             .r_o(r_hold_wire), .g_o(g_hold_wire), .b_o(b_hold_wire),

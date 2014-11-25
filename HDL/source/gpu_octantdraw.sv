@@ -85,6 +85,11 @@ module gpu_octantdraw
                 trX <= trX + 1;                 
               end
           end
+        else
+          begin
+            reg_done <= 1'b0;
+            reg_done <= 1'b0;
+          end
       end
   end
   
