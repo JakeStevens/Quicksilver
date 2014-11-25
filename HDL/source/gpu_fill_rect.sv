@@ -51,7 +51,7 @@ module gpu_fill_rect
             y_o <= y1_i;
             busy_o <= 1;
           end
-        else if (start_i == 1'b1 && start_edge == 1'b0)
+        else if (start_i == 1'b1 && start_edge == 1'b0 && busy_o == 1'b1)
           if ((x_o == x2_i && y_o == y2_i) ||
               (y_o == `HEIGHT_BITS'd`HEIGHT))
             begin

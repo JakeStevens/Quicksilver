@@ -50,7 +50,7 @@ module tb_gpu_fill_rect();
   
   initial
   begin
-    File = $fopen("/home/ecegrid/a/mg115/ece337/Quicksilver/HDL/source/tb_fill_output.txt");
+    File = $fopen("source/tb_fill_output.txt");
     if (!File)
       $display("file not opened");
     else
