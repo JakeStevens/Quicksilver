@@ -13,16 +13,17 @@ module tb_gpu();
   reg tb_pSel;
   reg tb_pEnable;
   reg tb_pWrite;
-  reg [`WIDTH_BITS-1:0] tb_x;
-  reg [`HEIGHT_BITS-1:0] tb_y;
-  reg [`CHANNEL_BITS-1:0] tb_r, tb_g, tb_b;
+  reg tb_CE1_o, tb_CE0_o, tb_LB_o, tb_R_W_o, tb_UB_o, tb_ZZ_o, tb_SEM_o, tb_OE_o;
+  reg [3*(`CHANNEL_BITS) - 1:0] tb_rgbdataout_o;
+  reg [`WIDTH_BITS + `HEIGHT_BITS:0] tb_adddataout_o;
   integer File;
   
   
   gpu DUT(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
               .pSel_i(tb_pSel), .pEnable_i(tb_pEnable), .pWrite_i(tb_pWrite),
-              .x_o(tb_x), .y_o(tb_y), .r_o(tb_r), .g_o(tb_g), .b_o(tb_b),
-              .data_avail(tb_busy));
+              .CE1_o(tb_CE1_o), .CE0_o(tb_CE0_o), .LB_o(tb_LB_o), .R_W_o(tb_R_W_o),
+              .UB_o(tb_UB_o), .ZZ_o(tb_ZZ_o), .SEM_o(tb_SEM_o), .OE_o(tb_OE_o),
+              .rgbdataout_o(tb_rgbdataout_o), .adddataout_o(tb_adddataout_o));
               
     always
     begin
@@ -35,12 +36,12 @@ module tb_gpu();
     always
     begin
       @ (posedge tb_clk);
-      if(tb_busy == 1'b1)
+      if(tb_R_W_o == 1'b0)
         begin
           if (File)
             begin
-              $fdisplay(File, "%d,%d,%d,%d,%d", tb_x, tb_y, tb_r, tb_g, tb_b);
-              $display("%d,%d,%d,%d,%d", tb_x, tb_y, tb_r, tb_g, tb_b);
+              $fdisplay(File, "%d,%d", tb_adddataout_o, tb_rgbdataout_o);
+              $display("%d,%d", tb_adddataout_o, tb_rgbdataout_o);
             end
           end
     end
