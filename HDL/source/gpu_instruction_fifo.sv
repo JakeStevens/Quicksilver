@@ -69,7 +69,7 @@ end
 always_ff @ (negedge n_rst, posedge clk) begin
   if (!n_rst) begin
     data <= 0;
-  end else if(write_enable_i) begin
+  end else if(write_enable_i && !fifo_full_o) begin
     data[write_ptr][FIFO_MAX_BIT:0] <= input_data;
   end
 end
@@ -99,7 +99,7 @@ always_ff @ (negedge n_rst, posedge clk) begin
   end else if(push_instruction_i == 1'b1 && !fifo_full_o) begin // TODO: Move this logic to a simple comb wire that we can reuse
     depth_cntr <= depth_cntr + 1;
   end else if(pop_instruction_i == 1'b1 && !fifo_empty_o) begin
-    depth_cntr <= depth_cntr + 1;
+    depth_cntr <= depth_cntr - 1;
   end
 end
 
