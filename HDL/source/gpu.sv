@@ -138,7 +138,7 @@ module gpu
   gpu_memcontroller memcontroller(.clk(clk), .n_rst(n_rst), .data_ready_i(data_ready),
                                   .rdata(r_hold_wire), .gdata(g_hold_wire), .bdata(b_hold_wire),
                                   .adddatax(x), .adddatay(y), .flush(/* fix me */), 
-                                  .CE1(CE1_o), .CE0(CE0_o), .LB(LB_o), .R_W(R_W_o), .UB(UB_o), .ZZ(ZZ_o),
-                                  .SEM(SEM_o), .OE(OE_o), .rgbdataout(rgbdataout_o), .adddataout(adddataout_o));
+                                  .CE1_o(CE1_o), .CE0_o(CE0_o), .LB_o(LB_o), .R_W_o(R_W_o), .UB_o(UB_o), .ZZ_o(ZZ_o),
+                                  .SEM_o(SEM_o), .OE_o(OE_o), .rgbdataout_o(rgbdataout_o), .adddataout_o(adddataout_o));
 
 endmodule

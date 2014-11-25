@@ -14,9 +14,9 @@ module gpu_memcontroller
   input wire flush,
   //input wire [10:0] offsetx,
   //input wire [10:0] offsety,
-  output wire CE1, CE0, LB, R_W, UB, ZZ, SEM, OE,
-  output wire [3*(`CHANNEL_BITS) - 1:0] rgbdataout,
-  output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout
+  output wire CE1_o, CE0_o, LB_o, R_W_o, UB_o, ZZ_o, SEM_o, OE_o,
+  output wire [3*(`CHANNEL_BITS) - 1:0] rgbdataout_o,
+  output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o
   );
   
   reg buffselect;
@@ -30,16 +30,16 @@ module gpu_memcontroller
   
   gpu_packlut2 packlut(.addressy(adddatay), .rtpaddy(changedaddressy));
   //assign addadress = changedaddressy + adddatax;
-  assign adddataout = packaddress; 
-  assign rgbdataout = rgbpackdata;
-  assign CE1 = regCE1;
-  assign CE0 = regCE0;
-  assign LB = regLB;
-  assign R_W = regR_W;
-  assign UB = regUB;
-  assign ZZ = regZZ;
-  assign SEM = regSEM;
-  assign OE = regOE;
+  assign adddataout_o = packaddress; 
+  assign rgbdataout_o = rgbpackdata;
+  assign CE1_o = regCE1;
+  assign CE0_o = regCE0;
+  assign LB_o = regLB;
+  assign R_W_o = regR_W;
+  assign UB_o = regUB;
+  assign ZZ_o = regZZ;
+  assign SEM_o = regSEM;
+  assign OE_o = regOE;
 
   always @ (posedge clk, negedge n_rst)
   begin: mainreg
