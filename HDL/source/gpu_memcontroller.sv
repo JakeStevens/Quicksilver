@@ -5,7 +5,7 @@ module gpu_memcontroller
 (
   input wire clk,
   input wire n_rst,
-  input wire data_out,
+  input wire data_ready_i,
   input wire [`CHANNEL_BITS -1:0] rdata,
   input wire [`CHANNEL_BITS -1:0] gdata,
   input wire [`CHANNEL_BITS- 1:0] bdata,
@@ -51,12 +51,12 @@ module gpu_memcontroller
       regCE1 <= 1'b0;
       regZZ <= 1'b0;
     end
-    else if (!data_out)
+    else if (!data_ready_i)
       begin
         state <= IDLE;//HIGH Z on inputs
         regZZ <= 1'b1;
       end
-    else if (data_out)
+    else if (data_ready_i)
       begin
         state <= OUTPUT;// output to frame buffer
         regZZ <= 1'b0;

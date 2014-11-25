@@ -9,12 +9,14 @@ module gpu
   input wire pSel_i,
   input wire pEnable_i,
   input wire pWrite_i,
-  output wire [`WIDTH_BITS-1:0] x_o,
-  output wire [`HEIGHT_BITS-1:0] y_o,
-  output wire [`CHANNEL_BITS-1:0] r_o,
-  output wire [`CHANNEL_BITS-1:0] g_o,
-  output wire [`CHANNEL_BITS-1:0] b_o,
-  output wire data_avail
+  //output wire [`WIDTH_BITS-1:0] x_o,
+  //output wire [`HEIGHT_BITS-1:0] y_o,
+  //output wire [`CHANNEL_BITS-1:0] r_o,
+  //output wire [`CHANNEL_BITS-1:0] g_o,
+  //output wire [`CHANNEL_BITS-1:0] b_o,
+  output wire CE1_o, CE0_o, LB_o, R_W_o, UB_o, ZZ_o, SEM_o, OE_o,
+  output wire [3*(`CHANNEL_BITS) - 1:0] rgbdataout_o,
+  output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o
   );
   
   wire [3:0] opcode_wire, op_wire, opcode_wire_o;
@@ -33,14 +35,14 @@ module gpu
   wire [`WIDTH_BITS-1:0] rad_wire, rad_o_wire, rad_arc_in;
   wire [2:0] oct_wire, oct_o_wire, oct_arc_in;
   
-  wire [`CHANNEL_BITS-1:0] r_wire, g_wire, b_wire, r_o_wire, g_o_wire, b_o_wire;
+  wire [`CHANNEL_BITS-1:0] r_wire, g_wire, b_wire, r_o_wire, g_o_wire, b_o_wire, r_hold_wire, g_hold_wire, b_hold_wire;
   
   wire push_wire, w_en_wire, pop_wire, empty_wire, full_wire;
   wire finished_line_wire, finished_fill_wire,finished_arc_wire; 
   wire run_line_wire, run_fill_wire, run_arc_wire;
   wire line_busy_wire, fill_busy_wire, arc_busy_wire;
+  wire data_ready;
   
-  assign data_avail = line_busy_wire || fill_busy_wire || arc_busy_wire;
   //TODO: assign x y r g b out through memory controller
   assign x_o = x;
   assign y_o = y;
@@ -87,6 +89,8 @@ module gpu
                             .finished_fill_i(finished_fill_wire),
                             .fifo_empty_i(empty_wire), 
                             
+                            .r_o(r_hold_wire), .g_o(g_hold_wire), .b_o(b_hold_wire),
+
                             .x1_line_o(x1_line_in),
                             .x2_line_o(x2_line_in), .y1_line_o(y1_line_in),
                             .y2_line_o(y2_line_in), .run_line_o(run_line_wire),
@@ -128,12 +132,12 @@ module gpu
                             .line_active(line_busy_wire),
                             .fill_active(fill_busy_wire),
                             .arc_active(arc_busy_wire),
-                            .x_o(x), .y_o(y));
+                            .x_o(x), .y_o(y), .data_ready_o(data_ready));
 
-                        
-                            
-  
-                            
-  
-  
+  gpu_memcontroller memcontroller(.clk(clk), .n_rst(n_rst), .data_ready_i(data_ready),
+                                  .rdata(r_hold_wire), .gdata(g_hold_wire), .bdata(b_hold_wire),
+                                  .adddatax(x), .adddatay(y), .flush(/* fix me */), 
+                                  .CE1(CE1_o), .CE0(CE0_o), .LB(LB_o), .R_W(R_W_o), .UB(UB_o), .ZZ(ZZ_o),
+                                  .SEM(SEM_o), .OE(OE_o), .rgbdataout(rgbdataout_o), .adddataout(adddataout_o));
+
 endmodule

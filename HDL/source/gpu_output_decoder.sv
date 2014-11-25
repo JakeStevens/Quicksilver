@@ -16,8 +16,11 @@ module gpu_output_decoder
   input wire arc_active,
   
   output reg [`WIDTH_BITS-1:0] x_o,
-  output reg [`HEIGHT_BITS-1:0] y_o
+  output reg [`HEIGHT_BITS-1:0] y_o,
+  output wire data_ready_o
   );
+  
+  assign data_ready_o = line_active | fill_active | arc_active;
   
   always_comb
   begin

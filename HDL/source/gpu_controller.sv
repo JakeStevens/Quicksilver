@@ -17,6 +17,11 @@ module gpu_controller
   input wire finished_line_i,
   input wire finished_fill_i,
   input wire fifo_empty_i,
+  
+  output reg [`CHANNEL_BITS-1:0] r_o,
+  output reg [`CHANNEL_BITS-1:0] g_o,
+  output reg [`CHANNEL_BITS-1:0] b_o,
+  
   output reg [`WIDTH_BITS-1:0] x1_line_o,
   output reg [`HEIGHT_BITS-1:0] y1_line_o,
   output reg [`WIDTH_BITS-1:0] x2_line_o,
@@ -50,6 +55,20 @@ module gpu_controller
       state <= 0;
     else
       state <= nextstate;
+  end
+  
+  always_ff @ (posedge clk, negedge n_rst) begin
+    if (n_rst == 1'b0) begin
+      r_o <= 0;
+      g_o <= 0;
+      b_o <= 0;
+    end 
+    else if (state == 1'b1) begin
+        // register color values from memory controller and hold them until next instruction
+        r_o <= r_i;
+        g_o <= g_i;
+        b_o <= b_i;
+    end
   end
   
   always_comb
