@@ -47,7 +47,7 @@ module tb_gpu();
     
     initial
     begin
-      File = $fopen("/home/ecegrid/a/mg115/ece337/Quicksilver/drivers/tb_output.txt");
+      File = $fopen("tb_output.txt");
         if (!File)
           $display("file not opened");
         else
@@ -70,7 +70,7 @@ module tb_gpu();
       
       //Update this based on how many items are drawn
       //Basically, everything must be drawn before you close
-      #(CLK_PERIOD * 1000);
+      #(CLK_PERIOD * 10000);
       $fclose(File);
       $display("File closed");
     end

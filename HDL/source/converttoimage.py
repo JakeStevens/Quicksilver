@@ -3,7 +3,7 @@ from PIL import Image
 
 def getframebuffer_sv():
 	pixelData = []
-	with open("tb_output.txt", "r") as readFile:
+	with open("../HDL/tb_output.txt", "r") as readFile:
 		for line in readFile:
 			splitLine = line.replace(" ","")
 			splitLine = line.strip().split(",")

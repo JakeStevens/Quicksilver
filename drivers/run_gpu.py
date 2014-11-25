@@ -23,7 +23,9 @@ def importsvfromfile():
     outFile.close()
 
 def compile_and_run():
-    print("Compiling driver code...")
+    subprocess.call(["rm", "../HDL/tb_output.txt"])
+    subprocess.call(["rm", "img.jpg"])
+    print("Compiling./H driver code...")
     err = subprocess.call(["gcc", "gpu_test_main.c"])
     if err == 1:
         print("Compile Error. Run aborted...")
@@ -39,6 +41,7 @@ def compile_and_run():
     subprocess.call(["../HDL/source/converttoimage.py"])
     print("Displaying image...")
     subprocess.call(["eog", "img.jpg"])
+    #subprocess.call(["rm", "../HDL/tb_output.txt"])
 
 if __name__ == "__main__":
     compile_and_run()    
