@@ -16,7 +16,8 @@ module gpu
   //output wire [`CHANNEL_BITS-1:0] b_o,
   output wire CE1_o, CE0_o, LB_o, R_W_o, UB_o, ZZ_o, SEM_o, OE_o,
   output wire [3*(`CHANNEL_BITS) - 1:0] rgbdataout_o,
-  output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o
+  output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o,
+  output wire buffer_select_o
   );
   
   wire [3:0] opcode_wire, op_wire, opcode_wire_o;
@@ -42,6 +43,7 @@ module gpu
   wire run_line_wire, run_fill_wire, run_arc_wire;
   wire line_busy_wire, fill_busy_wire, arc_busy_wire;
   wire data_ready;
+  wire flush_frame_wire;
   
   //TODO: assign x y r g b out through memory controller
   assign x_o = x;
@@ -104,7 +106,7 @@ module gpu
                             .rad_arc_o(rad_arc_in), .oct_arc_o(oct_arc_in),
                             .run_arc_o(run_arc_wire),
                             
-                            .pop_o(pop_wire));
+                            .pop_o(pop_wire), .flush_frame_o(flush_frame_wire));
                       
                         
   gpu_draw_line line(.clk(clk), .n_rst(n_rst), .x1(x1_line_in),
@@ -137,8 +139,9 @@ module gpu
 
   gpu_memcontroller memcontroller(.clk(clk), .n_rst(n_rst), .data_ready_i(data_ready),
                                   .rdata(r_hold_wire), .gdata(g_hold_wire), .bdata(b_hold_wire),
-                                  .adddatax(x), .adddatay(y), .flush(/* fix me */), 
+                                  .adddatax(x), .adddatay(y), .flush(flush_frame_wire), 
                                   .CE1_o(CE1_o), .CE0_o(CE0_o), .LB_o(LB_o), .R_W_o(R_W_o), .UB_o(UB_o), .ZZ_o(ZZ_o),
-                                  .SEM_o(SEM_o), .OE_o(OE_o), .rgbdataout_o(rgbdataout_o), .adddataout_o(adddataout_o));
+                                  .SEM_o(SEM_o), .OE_o(OE_o), .rgbdataout_o(rgbdataout_o),
+				  .adddataout_o(adddataout_o), .buffer_select_o(buffer_select_o));
 
 endmodule

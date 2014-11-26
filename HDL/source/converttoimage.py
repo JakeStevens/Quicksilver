@@ -2,9 +2,9 @@
 from PIL import Image
 import re
 
-def getframebuffer_sv():
+def getframebuffer_sv(filename):
 	pixelData = []
-	with open("../HDL/tb_output.txt", "r") as readFile:
+	with open(filename, "r") as readFile:
 		for line in readFile:
 			splitLine = line.replace(" ","")
 			splitLine = line.strip().split(",")
@@ -28,14 +28,17 @@ def pixelstobuffer(pixelData):
 		b = rgb & (2**channelsize - 1)
 		g = (rgb >> channelsize) & (2**channelsize - 1)
 		r = (rgb >> 2*channelsize) & (2**channelsize - 1)
+		if addr >= 480*640:
+			addr = addr - 640*480
 		frameBuffer[addr] = (int(r),int(g),int(b))
 	return frameBuffer
 
-def convert():
+def convert(filenamein, filenameout):
 	im = Image.new("RGB", (640,480))
-	data = getframebuffer_sv()
+	data = getframebuffer_sv(filenamein)
 	im.putdata(data)
-	im.save("img.jpg") 
+	im.save(filenameout) 
 
 if __name__ == "__main__":
-	convert()
+	convert('../HDL/tb_output1.txt', 'img1.jpg')
+	convert('../HDL/tb_output2.txt', 'img2.jpg')

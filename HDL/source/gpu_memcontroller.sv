@@ -16,7 +16,8 @@ module gpu_memcontroller
   //input wire [10:0] offsety,
   output wire CE1_o, CE0_o, LB_o, R_W_o, UB_o, ZZ_o, SEM_o, OE_o,
   output wire [3*(`CHANNEL_BITS) - 1:0] rgbdataout_o,
-  output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o
+  output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o,
+  output wire buffer_select_o
   );
   
   reg buffselect;
@@ -40,6 +41,7 @@ module gpu_memcontroller
   assign ZZ_o = regZZ;
   assign SEM_o = regSEM;
   assign OE_o = regOE;
+  assign buffer_select_o = buffselect;
 
   always @ (posedge clk, negedge n_rst)
   begin: mainreg
