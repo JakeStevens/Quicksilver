@@ -75,6 +75,11 @@ module tb_gpu();
       
       @(posedge tb_clk);
       
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      
 //{insert commands here}
       
       //Update this based on how many items are drawn
