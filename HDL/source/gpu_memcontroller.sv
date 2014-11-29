@@ -12,8 +12,6 @@ module gpu_memcontroller
   input wire [`WIDTH_BITS - 1:0] adddatax,
   input wire [`HEIGHT_BITS - 1:0] adddatay,
   input wire flush,
-  //input wire [10:0] offsetx,
-  //input wire [10:0] offsety,
   output wire CE1_o, CE0_o, LB_o, R_W_o, UB_o, ZZ_o, SEM_o, OE_o,
   output wire [3*(`CHANNEL_BITS) - 1:0] rgbdataout_o,
   output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o,
@@ -22,15 +20,10 @@ module gpu_memcontroller
   
   reg buffselect;
   reg [`HEIGHT_BITS + `WIDTH_BITS:0] packaddress, changedaddressy, offset;
-  //reg [`HEIGHT_BITS + `WIDTH_BITS:0] addaddress;
   reg [3*(`CHANNEL_BITS) - 1:0] rgbpackdata;
   reg regCE1, regCE0, regLB, regR_W, regUB, regSEM, regZZ, regOE;
   
-  typedef enum bit[1:0] {NULL, IDLE, OUTPUT} stateType;
-  stateType state,nextstate;
-  
   gpu_packlut2 packlut(.addressy(adddatay), .rtpaddy(changedaddressy));
-  //assign addadress = changedaddressy + adddatax;
   assign adddataout_o = packaddress; 
   assign rgbdataout_o = rgbpackdata;
   assign CE1_o = regCE1;
@@ -47,7 +40,6 @@ module gpu_memcontroller
   begin: mainreg
     if (!n_rst)
     begin
-      state <= NULL; //power down SRAM chip
       regCE0 <= 1'b1;
       regSEM <= 1'b1;
       regCE1 <= 1'b0;
@@ -55,13 +47,11 @@ module gpu_memcontroller
     end
     else if (!data_ready_i)
       begin
-        state <= IDLE;//HIGH Z on inputs
         regZZ <= 1'b1;
         regR_W <= 1'b1;
       end
     else if (data_ready_i)
       begin
-        state <= OUTPUT;// output to frame buffer
         regZZ <= 1'b0;
         regR_W <= 1'b0;
         regLB <= 1'b0;
@@ -97,9 +87,3 @@ module gpu_memcontroller
   
   
 endmodule
-        
-        
-      
-       
-  
-
