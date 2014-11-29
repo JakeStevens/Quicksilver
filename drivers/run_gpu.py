@@ -39,9 +39,7 @@ def compile_and_run():
     subprocess.call(["make", "-C", "../HDL/", "clean", "sim_full_mapped"])
     print("Converting to an image...")
     subprocess.call(["../HDL/source/converttoimage.py"])
-    print("Displaying image...")
-    subprocess.call(["eog", "img.jpg"])
-    #subprocess.call(["rm", "../HDL/tb_output.txt"])
+    print("Images created. Use eog to view img1 and/org img2...")
 
 if __name__ == "__main__":
     compile_and_run()    
