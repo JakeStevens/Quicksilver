@@ -57,6 +57,7 @@ module gpu_memcontroller
       begin
         state <= IDLE;//HIGH Z on inputs
         regZZ <= 1'b1;
+        regR_W <= 1'b1;
       end
     else if (data_ready_i)
       begin
