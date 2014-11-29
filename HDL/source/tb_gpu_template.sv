@@ -10,6 +10,7 @@ module tb_gpu();
   reg tb_n_rst;
   reg [31:0] tb_pAddr;
   reg [31:0] tb_pDataWrite;
+  reg tb_fifo_full_o;
   reg tb_pSel;
   reg tb_pEnable;
   reg tb_pWrite;
@@ -25,7 +26,8 @@ module tb_gpu();
               .CE1_o(tb_CE1_o), .CE0_o(tb_CE0_o), .LB_o(tb_LB_o), .R_W_o(tb_R_W_o),
               .UB_o(tb_UB_o), .ZZ_o(tb_ZZ_o), .SEM_o(tb_SEM_o), .OE_o(tb_OE_o),
               .rgbdataout_o(tb_rgbdataout_o), .adddataout_o(tb_adddataout_o),
-	      .buffer_select_o(tb_buff_sel));
+	      .buffer_select_o(tb_buff_sel),
+	      .fifo_full_o(tb_fifo_full_o));
               
     always
     begin
@@ -77,7 +79,7 @@ module tb_gpu();
       
       //Update this based on how many items are drawn
       //Basically, everything must be drawn before you close
-      #(CLK_PERIOD * 10000);
+      #(CLK_PERIOD * 1000000);
       $fclose(File1);
       $fclose(File2);
       $display("File closed");

@@ -9,21 +9,25 @@ module gpu
   input wire pSel_i,
   input wire pEnable_i,
   input wire pWrite_i,
-  //output wire [`WIDTH_BITS-1:0] x_o,
-  //output wire [`HEIGHT_BITS-1:0] y_o,
-  //output wire [`CHANNEL_BITS-1:0] r_o,
-  //output wire [`CHANNEL_BITS-1:0] g_o,
-  //output wire [`CHANNEL_BITS-1:0] b_o,
   output wire CE1_o, CE0_o, LB_o, R_W_o, UB_o, ZZ_o, SEM_o, OE_o,
   output wire [3*(`CHANNEL_BITS) - 1:0] rgbdataout_o,
   output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o,
-  output wire buffer_select_o
+  output wire buffer_select_o,
+  output wire fifo_full_o
   );
   
-  wire [3:0] opcode_wire, op_wire, opcode_wire_o;
-  wire [27:0] parameters_wire;
+  /* FIFO SIGNALS */
+  wire push_wire, w_en_wire, pop_wire, empty_wire, fifo_full_o;
+  wire [3:0] opcode_wire, op_wire;
   wire [`WIDTH_BITS-1:0] x1_wire, x2_wire, x1_o_wire, x2_o_wire;
   wire [`HEIGHT_BITS-1:0] y1_wire, y2_wire, y1_o_wire, y2_o_wire;
+  wire [`CHANNEL_BITS-1:0] r_wire, g_wire, b_wire, r_o_wire, g_o_wire, b_o_wire;
+  wire [2:0] oct_wire, oct_o_wire;
+  wire [`WIDTH_BITS-1:0] rad_wire, rad_o_wire;
+  
+  
+  wire [3:0] opcode_wire_o;
+  wire [27:0] parameters_wire;
   
   wire [`WIDTH_BITS-1:0] x1_fill_in, x2_fill_in, x1_line_in, x2_line_in;
   wire [`WIDTH_BITS-1:0] x1_arc_in;
@@ -33,12 +37,11 @@ module gpu
   
   wire [`WIDTH_BITS-1:0] x_line_out, x_fill_out, x_arc_out, x;
   wire [`HEIGHT_BITS-1:0] y_line_out, y_fill_out, y_arc_out, y;
-  wire [`WIDTH_BITS-1:0] rad_wire, rad_o_wire, rad_arc_in;
-  wire [2:0] oct_wire, oct_o_wire, oct_arc_in;
+  wire [`WIDTH_BITS-1:0] rad_arc_in;
+  wire [2:0] oct_arc_in;
   
-  wire [`CHANNEL_BITS-1:0] r_wire, g_wire, b_wire, r_o_wire, g_o_wire, b_o_wire, r_hold_wire, g_hold_wire, b_hold_wire;
+  wire [`CHANNEL_BITS-1:0] r_hold_wire, g_hold_wire, b_hold_wire;
   
-  wire push_wire, w_en_wire, pop_wire, empty_wire, full_wire;
   wire finished_line_wire, finished_fill_wire,finished_arc_wire; 
   wire run_line_wire, run_fill_wire, run_arc_wire;
   wire line_busy_wire, fill_busy_wire, arc_busy_wire;
@@ -67,7 +70,7 @@ module gpu
                               .opcode_o(opcode_wire_o),
                               .push_instruction_o(push_wire),
                               .write_enable_o(w_en_wire));
-            
+ /*           
   gpu_instruction_fifo fifo(.clk(clk), .n_rst(n_rst), .opcode_i(opcode_wire_o),
                             .x1_i(x1_wire), .y1_i(y1_wire), .x2_i(x2_wire),
                             .y2_i(y2_wire), .r_i(r_wire), .g_i(g_wire),
@@ -81,6 +84,35 @@ module gpu
                             .y1_o(y1_o_wire), .x2_o(x2_o_wire),.y2_o(y2_o_wire),
                             .r_o(r_o_wire), .g_o(g_o_wire), .b_o(b_o_wire),
                             .oct_o(oct_o_wire), .rad_o(rad_o_wire));
+  */
+  gpu_instruction_fifo fifo(.clk(clk),
+                            .n_rst(n_rst),
+                            .opcode_i(opcode_wire_o),
+                            .x1_i(x1_wire),
+                            .y1_i(y1_wire),
+                            .x2_i(x2_wire),
+                            .y2_i(y2_wire),
+                            .rad_i(rad_wire),
+                            .r_i(r_wire),
+                            .g_i(g_wire),
+                            .b_i(b_wire),
+                            .oct_i(oct_wire),
+                            .push_instruction_i(push_wire),
+                            .write_enable_i(w_en_wire),
+                            .pop_instruction_i(pop_wire),
+                            .fifo_empty_o(empty_wire),
+                            .fifo_full_o(fifo_full_o),
+                            .opcode_o(op_wire),
+                            .x1_o(x1_o_wire),
+                            .y1_o(y1_o_wire),
+                            .x2_o(x2_o_wire),
+                            .y2_o(y2_o_wire),
+                            .rad_o(rad_o_wire),
+                            .r_o(r_o_wire),
+                            .g_o(g_o_wire),
+                            .b_o(b_o_wire),
+                            .oct_o(oct_o_wire));
+                            
                             
   gpu_controller controller(.clk(clk), .n_rst(n_rst), .opcode_i(op_wire),
                             .x1_i(x1_o_wire), .x2_i(x2_o_wire), 
