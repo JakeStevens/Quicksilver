@@ -150,7 +150,7 @@ module gpu_instruction_decoder
               g_o_n = parameters_i[2*`CHANNEL_BITS:`CHANNEL_BITS];
               r_o_n = parameters_i[3*`CHANNEL_BITS-1:2*`CHANNEL_BITS];
               opcode_o_n = opcode_i;
-              oct_o_n = parameters_i[27:25];
+              oct_o_n = parameters_i[26:24];
               write_enable_o_n = 1'b1;
               push_instruction_o_n = 1'b1; 
             end
