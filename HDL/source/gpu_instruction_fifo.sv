@@ -96,6 +96,8 @@ end
 always_ff @ (negedge n_rst, posedge clk) begin
   if(!n_rst) begin
     depth_cntr <= 0;
+  end else if (push_instruction_i == 1'b1 && pop_instruction_i == 1'b1) begin
+    depth_cntr <= depth_cntr;
   end else if(push_instruction_i == 1'b1 && !fifo_full_o) begin // TODO: Move this logic to a simple comb wire that we can reuse
     depth_cntr <= depth_cntr + 1;
   end else if(pop_instruction_i == 1'b1 && !fifo_empty_o) begin
