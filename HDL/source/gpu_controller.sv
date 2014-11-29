@@ -41,7 +41,8 @@ module gpu_controller
   output reg [2:0] oct_arc_o,
   output reg run_arc_o,
   
-  output reg pop_o
+  output reg pop_o,
+  output reg flush_frame_o
   );
   
   /*
@@ -86,7 +87,7 @@ module gpu_controller
         end
       1'b1:
         begin
-          if(finished_line_i == 1'b1 || finished_fill_i == 1'b1 || finished_arc_i == 1'b1)
+          if(finished_line_i == 1'b1 || finished_fill_i == 1'b1 || finished_arc_i == 1'b1 || opcode_i == 4'b1000)
 	           begin
 	             pop_o = 1;
 	             nextstate = 0;
@@ -103,8 +104,9 @@ module gpu_controller
     y1_line_o = 0;
     x2_line_o = 0;
     y2_line_o = 0;
-
     run_line_o = 0;
+    
+    run_fill_o = 0;
     x1_fill_o = 0;
     y1_fill_o = 0;
     x2_fill_o = 0;
@@ -115,8 +117,8 @@ module gpu_controller
     y1_arc_o = 0;
     rad_arc_o = 0;
     oct_arc_o = 0;
-
-    run_fill_o = 0;
+    
+    flush_frame_o = 0;
     //state only changes when an instruction is being processed
     if (state == 1'b1) 
       begin
@@ -145,6 +147,8 @@ module gpu_controller
 	         oct_arc_o = oct_i;
 	         run_arc_o = 1'b1;
 	        end
+	       4'b1000:
+	         flush_frame_o = 1;
         endcase
       end
   end
