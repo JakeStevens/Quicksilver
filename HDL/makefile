@@ -20,10 +20,12 @@ COMPONENT_FILES	:= gpu_output_decoder.sv gpu_apb_interface.sv gpu_draw_line.sv
 COMPONENT_FILES += rise_edge_detect.sv gpu_instruction_decoder.sv
 COMPONENT_FILES += gpu_instruction_fifo.sv gpu_controller.sv gpu_fill_rect.sv
 COMPONENT_FILES += gpu_octantdraw.sv gpu_memcontroller.sv gpu_packlut2.sv
+#COMPONENT_FILES := rise_edge_detect.sv
 # Specify the name of the top level file (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS
 # AND THE AUTOMATED GRADING SYSTEM
 TOP_LEVEL_FILE	:= gpu.sv
+#TOP_LEVEL_FILE := filledcircle.sv
 # Specify the filepath of the test bench you want to use (ie. tb_top_level.sv)
 # (do not include the source folder in the name)
 TEST_BENCH	:= tb_$(TOP_LEVEL_FILE)
