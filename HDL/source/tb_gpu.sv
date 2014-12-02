@@ -10,6 +10,7 @@ module tb_gpu();
   reg tb_n_rst;
   reg [31:0] tb_pAddr;
   reg [31:0] tb_pDataWrite;
+  reg tb_fifo_full_o;
   reg tb_pSel;
   reg tb_pEnable;
   reg tb_pWrite;
@@ -25,7 +26,12 @@ module tb_gpu();
               .CE1_o(tb_CE1_o), .CE0_o(tb_CE0_o), .LB_o(tb_LB_o), .R_W_o(tb_R_W_o),
               .UB_o(tb_UB_o), .ZZ_o(tb_ZZ_o), .SEM_o(tb_SEM_o), .OE_o(tb_OE_o),
               .rgbdataout_o(tb_rgbdataout_o), .adddataout_o(tb_adddataout_o),
+<<<<<<< Updated upstream
 	      .buffer_select_o(tb_buff_sel));
+=======
+	      .buffer_select_o(tb_buff_sel),
+	      .fifo_full_o(tb_fifo_full_o));
+>>>>>>> Stashed changes
               
     always
     begin
@@ -73,7 +79,16 @@ module tb_gpu();
       
       @(posedge tb_clk);
       
+<<<<<<< Updated upstream
       tb_pDataWrite = 32'h300000c8;
+=======
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      
+      tb_pDataWrite = 32'h30000014;
+>>>>>>> Stashed changes
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
@@ -82,7 +97,11 @@ module tb_gpu();
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+<<<<<<< Updated upstream
       tb_pDataWrite = 32'h20032140;
+=======
+      tb_pDataWrite = 32'h2003c140;
+>>>>>>> Stashed changes
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
@@ -91,7 +110,200 @@ module tb_gpu();
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+<<<<<<< Updated upstream
       tb_pDataWrite = 32'h70ffffff;
+=======
+      tb_pDataWrite = 32'h70ff0000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h30000014;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2003c140;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h7100ff00;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h30000014;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2003c140;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h720000ff;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h30000014;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2003c140;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h73eb1fe4;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h30000014;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2003c140;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h74ffff00;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h30000014;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2003c140;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h75ffffff;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h30000014;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2003c140;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h76ff8000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h30000014;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2003c140;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h77ff007f;
+>>>>>>> Stashed changes
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
@@ -104,7 +316,11 @@ module tb_gpu();
       
       //Update this based on how many items are drawn
       //Basically, everything must be drawn before you close
+<<<<<<< Updated upstream
       #(CLK_PERIOD * 10000);
+=======
+      #(CLK_PERIOD * 1000000);
+>>>>>>> Stashed changes
       $fclose(File1);
       $fclose(File2);
       $display("File closed");
