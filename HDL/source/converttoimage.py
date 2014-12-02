@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 from PIL import Image
 import re
+import sys
 
 def getframebuffer_sv(filename):
 	pixelData = []
@@ -21,15 +22,21 @@ def getColorChannelSize():
 
 def pixelstobuffer(pixelData):
 	frameBuffer = [(0,0,0) for y in range(480) for x in range(640)]
-	for pixel in pixelData: 
-		addr,rgb = pixel
-		addr, rgb = int(addr), int(rgb)
-		channelsize = getColorChannelSize()
-		b = rgb & (2**channelsize - 1)
-		g = (rgb >> channelsize) & (2**channelsize - 1)
-		r = (rgb >> 2*channelsize) & (2**channelsize - 1)
+	for pixel in pixelData:
+	
+		if sys.argv[1] == '--unpacked'
+			x,y,r,g,b = [int(z) for z in pixel]
+			addr = y*640 + x
+		else 
+			addr,rgb = [int(z) for z in pixel]
+			channelsize = getColorChannelSize()
+			b = rgb & (2**channelsize - 1)
+			g = (rgb >> channelsize) & (2**channelsize - 1)
+			r = (rgb >> 2*channelsize) & (2**channelsize - 1)
+
 		if addr >= 480*640:
 			addr = addr - 640*480
+			
 		frameBuffer[addr] = (int(r),int(g),int(b))
 	return frameBuffer
 
