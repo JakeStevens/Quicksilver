@@ -3,20 +3,20 @@ module gpu_fill_circle
 (
   input wire clk,
   input wire n_rst,
-  input wire [`WIDTH_BITS - 1:0] xC,
-  input wire [`HEIGHT_BITS - 1:0] yC,
-  input wire [`WIDTH_BITS -1:0] rad,
-  input wire [`CHANNEL_BITS - 1:0] r_i,
+  input wire [`WIDTH_BITS - 1:0] xC_i,
+  input wire [`HEIGHT_BITS - 1:0] yC_i,
+  input wire [`WIDTH_BITS -1:0] rad_i,
+  /*input wire [`CHANNEL_BITS - 1:0] r_i,
   input wire [`CHANNEL_BITS - 1:0] g_i,
-  input wire [`CHANNEL_BITS - 1:0] b_i,
-  input wire start,
-  output wire done,
-  output wire busy,
-  output wire [`WIDTH_BITS - 1:0] X,
-  output wire [`HEIGHT_BITS - 1:0] Y,
-  output wire [`CHANNEL_BITS-1:0] r_o,
+  input wire [`CHANNEL_BITS - 1:0] b_i,*/
+  input wire start_i,
+  output wire done_o,
+  output wire busy_o,
+  output wire [`WIDTH_BITS - 1:0] X_o,
+  output wire [`HEIGHT_BITS - 1:0] Y_o
+  /*output wire [`CHANNEL_BITS-1:0] r_o,
   output wire [`CHANNEL_BITS-1:0] g_o,
-  output wire [`CHANNEL_BITS-1:0] b_o
+  output wire [`CHANNEL_BITS-1:0] b_o*/
   );
   
   reg signed [`WIDTH_BITS - 1:0] Fcontrol;
@@ -32,15 +32,15 @@ module gpu_fill_circle
   reg [`WIDTH_BITS - 1:0] rX, rY, trX, trY, cX1, cX2;//as ry starts from radius
   reg [`HEIGHT_BITS - 1:0] cY;
   
-  assign r_o = r_i;
+  /*assign r_o = r_i;
   assign g_o = g_i;
-  assign b_o = b_i;
-  assign X = rX;
-  assign Y = rY;
-  assign busy = reg_busy;
-  assign done = reg_done;
+  assign b_o = b_i;*/
+  assign X_o = rX;
+  assign Y_o = rY;
+  assign busy_o = reg_busy;
+  assign done_o = reg_done;
   
-  rise_edge_detect rise(.clk(clk),.n_rst(n_rst),.data_i(start),.rising_edge_found(start_edge));
+  rise_edge_detect rise(.clk(clk),.n_rst(n_rst),.data_i(start_i),.rising_edge_found(start_edge));
   
   
         
@@ -54,14 +54,14 @@ module gpu_fill_circle
 			end
 		else if (start_edge)
 			begin
-				Fcontrol <= (1 - (rad));
+				Fcontrol <= (1 - (rad_i));
 				reg_busy <= 1'b1;
         reg_done <= 1'b0;
-        trY <= rad;
+        trY <= rad_i;
         trX <= '0;
 				startreg <= 1'b1;
 			end		
-		else if (start == 1'b1 && start_edge == 1'b0 && reg_busy == 1'b1 && setover == 1'b1)
+		else if (start_i == 1'b1 && start_edge == 1'b0 && reg_busy == 1'b1 && setover == 1'b1)
 			begin
 				if ((trX >= trY))
       		begin
@@ -207,27 +207,27 @@ module gpu_fill_circle
 			end
 			3'b001:
 				begin
-				cX1 = xC - trX;
-				cX2 = xC + trX;
-				cY = yC + trY;
+				cX1 = xC_i - trX;
+				cX2 = xC_i + trX;
+				cY = yC_i + trY;
 				end
 			3'b010:
 				begin
-				cX1 = xC - trY;
-				cX2 = xC + trY;
-				cY = yC + trX;
+				cX1 = xC_i - trY;
+				cX2 = xC_i + trY;
+				cY = yC_i + trX;
 				end
 			3'b011:
 				begin
-				cX1 = xC - trX;
-				cX2 = xC + trX;
-				cY = yC - trY;
+				cX1 = xC_i - trX;
+				cX2 = xC_i + trX;
+				cY = yC_i - trY;
 				end
 			3'b100:
 				begin
-				cX1 = xC - trY;
-				cX2 = xC + trY;
-				cY = yC - trX;
+				cX1 = xC_i - trY;
+				cX2 = xC_i + trY;
+				cY = yC_i - trX;
 				end	
 		endcase
 	end
