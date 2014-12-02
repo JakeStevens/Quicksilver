@@ -212,7 +212,7 @@ module filledcircle
 	begin
 		cX1 = `WIDTH_BITS'd`WIDTH;
 		cX2 = `WIDTH_BITS'd`WIDTH;
-		cY = `WIDTH_BITS'd`WIDTH;
+		cY = `WIDTH_BITS'd`HEIGHT;
 		case (chordstate)
 			3'b000:
 			begin
@@ -264,7 +264,7 @@ always_ff @ (posedge clk, negedge n_rst)
   end
   
   assign setpoint = (fchange2 != fchange1);
-
+	assign chordfinish = (rX == cX2);
 
 
 
@@ -275,14 +275,14 @@ always_ff @ (posedge clk, negedge n_rst)
 		if (!n_rst)
 			begin
 			rX <= `WIDTH_BITS'd`WIDTH;
-			rY <= `HEIGHT_BITS'd`WIDTH;
-			chordfinish <= 1'b0;
+			rY <= `HEIGHT_BITS'd`HEIGHT;
+			//chordfinish <= 1'b0;
 			end
 		else if (chordstate == 3'b000 || chordstate == 3'b101 || chordstate == 3'b110 || chordstate == 3'b111)
 			begin
 				rX <= `WIDTH_BITS'd`WIDTH;
-			  rY <= `HEIGHT_BITS'd`WIDTH;
-				chordfinish <= 1'b1;
+			  rY <= `HEIGHT_BITS'd`HEIGHT;
+				//chordfinish <= 1'b0;
 			end
 		else
 			begin
@@ -291,7 +291,7 @@ always_ff @ (posedge clk, negedge n_rst)
 				begin
 					rX <= cX1;
 					rY <= cY;
-					chordfinish <= 1'b0;
+					//chordfinish <= 1'b0;
 				end
 			else
 				begin
@@ -299,13 +299,13 @@ always_ff @ (posedge clk, negedge n_rst)
 						begin
 						  rX <= rX;
 						  rY <= cY;
-							chordfinish <= 1'b1;
+						//	chordfinish <= 1'b1;
 						end
 					else
 						begin
 							rX <= rX + 1;
 							rY <= cY;
-							chordfinish <= 1'b0;
+							//chordfinish <= 1'b0;
 						end
 				end
 			end
