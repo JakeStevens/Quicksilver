@@ -70,6 +70,10 @@ fprintf(file, "      tb_pSel = 1'b1;\n");
 fprintf(file, "      tb_pEnable = 1'b0;\n");
 fprintf(file, "      tb_pWrite = 1'b1;\n");
 fprintf(file, "      #(CLK_PERIOD);\n");
+fprintf(file, "      while(tb_fifo_full_o == 1'b1)\n");
+fprintf(file, "      begin\n");
+fprintf(file, "      #(CLK_PERIOD);\n");
+fprintf(file, "      end\n");
 fclose(file);
 }
 
