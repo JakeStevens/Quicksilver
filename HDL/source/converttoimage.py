@@ -24,10 +24,10 @@ def pixelstobuffer(pixelData):
 	frameBuffer = [(0,0,0) for y in range(480) for x in range(640)]
 	for pixel in pixelData:
 	
-		if sys.argv[1] == '--unpacked'
+		if sys.argv[1] == '--unpacked':
 			x,y,r,g,b = [int(z) for z in pixel]
 			addr = y*640 + x
-		else 
+		else:
 			addr,rgb = [int(z) for z in pixel]
 			channelsize = getColorChannelSize()
 			b = rgb & (2**channelsize - 1)
