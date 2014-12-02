@@ -24,7 +24,7 @@ def pixelstobuffer(pixelData):
 	frameBuffer = [(0,0,0) for y in range(480) for x in range(640)]
 	for pixel in pixelData:
 	
-		if sys.argv[1] == '--unpacked':
+		if len(sys.argv) > 1 and sys.argv[1] == '--unpacked':
 			x,y,r,g,b = [int(z) for z in pixel]
 			addr = y*640 + x
 		else:
@@ -47,5 +47,4 @@ def convert(filenamein, filenameout):
 	im.save(filenameout) 
 
 if __name__ == "__main__":
-	convert('../HDL/tb_output1.txt', 'img1.jpg')
-	convert('../HDL/tb_output2.txt', 'img2.jpg')
+	convert('tb_filledcircleout2.txt', 'img.jpg')
