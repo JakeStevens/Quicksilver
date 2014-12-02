@@ -1,5 +1,5 @@
 `include "source/gpu_definitions.vh"
-module filledcircle
+module gpu_fill_circle
 (
   input wire clk,
   input wire n_rst,
@@ -19,7 +19,7 @@ module filledcircle
   output wire [`CHANNEL_BITS-1:0] b_o
   );
   
-  reg signed [`WIDTH_BITS+1:0] Fcontrol;
+  reg signed [`WIDTH_BITS - 1:0] Fcontrol;
 
   wire start_edge;
   reg reg_done, reg_busy;
@@ -50,6 +50,7 @@ module filledcircle
 			begin
 				reg_done <= 1'b0;
 				reg_busy <= 1'b0;
+				startreg <= 1'b0;
 			end
 		else if (start_edge)
 			begin
@@ -196,7 +197,7 @@ module filledcircle
 	begin
 		cX1 = `WIDTH_BITS'd`WIDTH;
 		cX2 = `WIDTH_BITS'd`WIDTH;
-		cY = `WIDTH_BITS'd`HEIGHT;
+		cY = `HEIGHT_BITS'd`HEIGHT;
 		case (chordstate)
 			3'b000:
 			begin

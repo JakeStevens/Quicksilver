@@ -1,7 +1,7 @@
 `timescale 1ns / 10 ps
 `include "source/gpu_definitions.vh"
 
-module tb_filledcircle();
+module tb_gpu_fill_circle();
   
   localparam CLK_PERIOD = 10;
   reg tb_clk, tb_n_rst, tb_start_i, tb_done_o, tb_busy_o;
@@ -13,7 +13,7 @@ module tb_filledcircle();
   reg [`CHANNEL_BITS-1:0] tb_b, tb_b_o;
   integer File; 
   
-  filledcircle circle(.clk(tb_clk), .n_rst(tb_n_rst),.xC(tb_xC_i),.yC(tb_yC_i),
+	gpu_fill_circle circle(.clk(tb_clk), .n_rst(tb_n_rst),.xC(tb_xC_i),.yC(tb_yC_i),
                       .rad(tb_rad_i), .r_i(tb_r), .g_i(tb_g), .b_i(tb_b), 
                       .start(tb_start_i), .done(tb_done_o), .busy(tb_busy_o),
                       .X(tb_X_o), .Y(tb_Y_o), .r_o(tb_r_o), .g_o(tb_g_o), .b_o(tb_b_o));
