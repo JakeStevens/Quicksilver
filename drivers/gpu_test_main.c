@@ -2,6 +2,10 @@
 
 int main(void)
 {
+    GPUDrawCircle(5, 100, 100, 255, 255, 255);
+    GPUDrawCircle(20, 200,200, 255,255,255);
+    GPUDrawCircle(5, 300, 300, 255,255,255);
+/*
     GPUDrawArc(20,320,240,0,255,0,0); //R
     GPUDrawArc(20,320,240,1,0,255,0); //G
     GPUDrawArc(20,320,240,2,0,0,255); //B
@@ -11,5 +15,6 @@ int main(void)
     GPUDrawArc(20,320,240,6,255,128,0); //orange 
     GPUDrawArc(20,320,240,7,255,0,127); //pink 
     return 1;
+*/
 }	  
 

@@ -17,6 +17,7 @@ module gpu_controller
   input wire finished_line_i,
   input wire finished_fill_i,
   input wire finished_arc_i,
+  input wire finished_circle_i,
   input wire fifo_empty_i,
   
   output reg [`CHANNEL_BITS-1:0] r_o,
@@ -40,6 +41,11 @@ module gpu_controller
   output reg [`WIDTH_BITS-1:0] rad_arc_o,
   output reg [2:0] oct_arc_o,
   output reg run_arc_o,
+  
+  output reg [`WIDTH_BITS-1:0] x1_circle_o,
+  output reg [`HEIGHT_BITS-1:0] y1_circle_o,
+  output reg [`WIDTH_BITS-1:0] rad_circle_o,
+  output reg run_circle_o,
   
   output reg pop_o,
   output reg flush_frame_o
@@ -87,7 +93,9 @@ module gpu_controller
         end
       1'b1:
         begin
-          if(finished_line_i == 1'b1 || finished_fill_i == 1'b1 || finished_arc_i == 1'b1 || opcode_i == 4'b1000)
+          if(finished_line_i == 1'b1 || finished_fill_i == 1'b1 
+            || finished_arc_i == 1'b1 ||finished_circle_i == 1'b1 
+             || opcode_i == 4'b1000)
 	           begin
 	             pop_o = 1;
 	             nextstate = 0;
@@ -100,11 +108,11 @@ module gpu_controller
 
   always_comb
   begin: outputLogic
+    run_line_o = 0;
     x1_line_o = 0;
     y1_line_o = 0;
     x2_line_o = 0;
     y2_line_o = 0;
-    run_line_o = 0;
     
     run_fill_o = 0;
     x1_fill_o = 0;
@@ -117,6 +125,11 @@ module gpu_controller
     y1_arc_o = 0;
     rad_arc_o = 0;
     oct_arc_o = 0;
+    
+    run_circle_o = 0;
+    x1_circle_o = 0;
+    y1_circle_o = 0;
+    rad_circle_o = 0;
     
     flush_frame_o = 0;
     //state only changes when an instruction is being processed
@@ -138,6 +151,13 @@ module gpu_controller
 	         x2_fill_o = x2_i;
 	         y2_fill_o = y2_i;
 	         run_fill_o = 1'b1;
+	       end
+	      4'b0110:
+	       begin
+	         x1_circle_o = x1_i;
+	         y1_circle_o = y1_i;
+	         rad_circle_o = rad_i;
+	         run_circle_o = 1'b1;
 	       end
 	      4'b0111:
 	       begin
