@@ -48,8 +48,9 @@ def convert(filenamein, filenameout):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='Convert testbench output into a JPEG image')
-	parser.add_argument('file', help='The file to convert')
+	parser.add_argument('files', help='The files to convert', nargs='+')
 	parser.add_argument('--unpacked', help='Whether the address data in the input file is in unpacked format', action='store_true')
 	args = parser.parse_args()
   
-	convert(args.file, 'img.jpg')
+	for f in args.files:
+		convert(f, f + '.jpg')
