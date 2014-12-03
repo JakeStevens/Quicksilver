@@ -61,13 +61,13 @@ inline void GPUIssueInstruction(uint32_t inst)
 //    GPU = inst; //Write to address corresponding to GPU
 FILE * file;
 file = fopen("sim.out", "a");
+fprintf(file, "      tb_pSel = 1'b1;\n");
+fprintf(file, "      tb_pEnable = 1'b0;\n");
+fprintf(file, "      tb_pWrite = 1'b1;\n");
+fprintf(file, "      #(CLK_PERIOD);\n");
 fprintf(file, "      tb_pDataWrite = 32'h%x;\n", inst);
 fprintf(file, "      tb_pSel = 1'b1;\n");
 fprintf(file, "      tb_pEnable = 0'b1;\n");
-fprintf(file, "      tb_pWrite = 1'b1;\n");
-fprintf(file, "      #(CLK_PERIOD);\n");
-fprintf(file, "      tb_pSel = 1'b1;\n");
-fprintf(file, "      tb_pEnable = 1'b0;\n");
 fprintf(file, "      tb_pWrite = 1'b1;\n");
 fprintf(file, "      #(CLK_PERIOD);\n");
 fprintf(file, "      while(tb_fifo_full_o == 1'b1)\n");

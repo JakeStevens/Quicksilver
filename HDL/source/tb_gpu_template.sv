@@ -75,16 +75,11 @@ module tb_gpu();
       
       @(posedge tb_clk);
       
-      tb_pSel = 1'b1;
-      tb_pEnable = 1'b0;
-      tb_pWrite = 1'b1;
-      #(CLK_PERIOD);
-      
 //{insert commands here}
       
       //Update this based on how many items are drawn
       //Basically, everything must be drawn before you close
-      #(CLK_PERIOD * 1000000);
+      #(CLK_PERIOD * 100000000);
       $fclose(File1);
       $fclose(File2);
       $display("File closed");
