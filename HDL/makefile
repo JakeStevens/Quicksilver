@@ -219,7 +219,7 @@ mapped_tb_%.sv: source/tb_%.sv $(M_WORK_LIB)
 # Simulation Targets
 ##############################################################################
 define CONSOLE_SIM_CMDS
-"run 10 us;	\
+"run .26 ms;	\
  quit -f"
 endef
 
@@ -255,9 +255,9 @@ sim_full_mapped: $(addprefix $(M_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST
 
 # This way just runs it like normal and only sets up the simulation but doesn't
 # run it or add any waveforms
-#	@$(SIMULATE) -i -t ps $(M_WORK_LIB).$(TB_MODULE)
-#	@cp -f transcript $(basename $(TOP_LEVEL_FILE)).mtran
-#	@echo -e "Done simulating the mapped design\n\n"
+	#@$(SIMULATE) -i -t ps $(M_WORK_LIB).$(TB_MODULE)
+	#@cp -f transcript $(basename $(TOP_LEVEL_FILE)).mtran
+	#@echo -e "Done simulating the mapped design\n\n"
 
 # Define a pattern rule for simulating the source version of individual files	without a testbench
 sim_%_source: $(S_WORK_LIB)/%

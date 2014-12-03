@@ -39,8 +39,13 @@ localparam FIFO_POINTER_BITS = 3; //log(2, 8)
 reg [FIFO_MAX_BIT:0] input_data, output_data;
 reg [FIFO_DEPTH-1:0][FIFO_MAX_BIT:0] data;
 reg [FIFO_POINTER_BITS-1:0] read_ptr, write_ptr;
-
 reg [FIFO_POINTER_BITS:0] depth_cntr;
+
+reg fifo_full;
+/* The outward fifo full signal will be less than the actual full
+   to account for latency between when a command is sent via APB to
+   when it is received, and for handling of the interrupt */
+assign fifo_full_o = (depth_cntr == 4'd7 || depth_cntr == 4'd8);
 
 // Assign the individual inputs and outputs into larger blocks to make
 // the words easier to work with
@@ -62,14 +67,14 @@ always_comb begin
   
   // FIFO flags
   fifo_empty_o = (depth_cntr == 0);
-  fifo_full_o = (depth_cntr == 4'd8);
+  fifo_full = (depth_cntr == 4'd8);
 end
 
 // Writing to FIFO
 always_ff @ (negedge n_rst, posedge clk) begin
   if (!n_rst) begin
     data <= 0;
-  end else if(write_enable_i && !fifo_full_o) begin
+  end else if(write_enable_i && !fifo_full) begin
     data[write_ptr][FIFO_MAX_BIT:0] <= input_data;
   end
 end
@@ -87,7 +92,7 @@ end
 always_ff @ (negedge n_rst, posedge clk) begin
   if(!n_rst) begin
     write_ptr <= 0;
-  end else if(push_instruction_i == 1'b1 && !fifo_full_o) begin
+  end else if(push_instruction_i == 1'b1 && !fifo_full) begin
     write_ptr <= write_ptr + 1; // TODO: need to handle rollover manually?
   end
 end
@@ -98,7 +103,7 @@ always_ff @ (negedge n_rst, posedge clk) begin
     depth_cntr <= 0;
   end else if (push_instruction_i == 1'b1 && pop_instruction_i == 1'b1) begin
     depth_cntr <= depth_cntr;
-  end else if(push_instruction_i == 1'b1 && !fifo_full_o) begin // TODO: Move this logic to a simple comb wire that we can reuse
+  end else if(push_instruction_i == 1'b1 && !fifo_full) begin // TODO: Move this logic to a simple comb wire that we can reuse
     depth_cntr <= depth_cntr + 1;
   end else if(pop_instruction_i == 1'b1 && !fifo_empty_o) begin
     depth_cntr <= depth_cntr - 1;
