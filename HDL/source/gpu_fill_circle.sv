@@ -13,8 +13,8 @@ module gpu_fill_circle
   output wire done_o,
   output wire busy_o,
   output wire [`WIDTH_BITS - 1:0] X_o,
-  output wire [`HEIGHT_BITS - 1:0] Y_o
-  /*output wire [`CHANNEL_BITS-1:0] r_o,
+  output wire [`HEIGHT_BITS - 1:0] Y_o/*,
+  output wire [`CHANNEL_BITS-1:0] r_o,
   output wire [`CHANNEL_BITS-1:0] g_o,
   output wire [`CHANNEL_BITS-1:0] b_o*/
   );
@@ -67,6 +67,7 @@ module gpu_fill_circle
       		begin
             reg_done <= 1'b1;
             reg_busy <= 1'b0;
+						startreg <= 1'b0;
           end
         else
           begin
@@ -79,9 +80,10 @@ module gpu_fill_circle
                 Fcontrol <= Fcontrol + ((trX - trY) << 1) + 5;
                 trY <= trY - 1;
               end
-            trX <= trX + 1;                 
+            trX <= trX + 1; 
+						startreg <= 1'b1;                
           end
-				startreg <= 1'b1;
+				//startreg <= 1'b1;
       end
 		else
 			begin
