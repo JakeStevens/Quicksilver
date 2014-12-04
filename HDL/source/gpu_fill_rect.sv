@@ -8,28 +8,12 @@ module gpu_fill_rect
   input wire [`HEIGHT_BITS-1:0] y1_i,
   input wire [`WIDTH_BITS-1:0] x2_i,
   input wire [`HEIGHT_BITS-1:0] y2_i,
-  /*
-  input wire [`CHANNEL_BITS-1:0] r_i,
-  input wire [`CHANNEL_BITS-1:0] g_i,
-  input wire [`CHANNEL_BITS-1:0] b_i,
-  */
   input wire start_i,
   output reg [`WIDTH_BITS-1:0] x_o,
   output reg [`HEIGHT_BITS-1:0] y_o,
-  /*
-  output wire [`CHANNEL_BITS-1:0] r_o,
-  output wire [`CHANNEL_BITS-1:0] g_o,
-  output wire [`CHANNEL_BITS-1:0] b_o,
-  */
   output reg done_o,
   output reg busy_o
   );
-  
-  /*
-  assign r_o = r_i;
-  assign g_o = g_i;
-  assign b_o = b_i;
-  */
   
   wire start_edge;
   
@@ -53,20 +37,27 @@ module gpu_fill_rect
           end
         else if (start_i == 1'b1 && start_edge == 1'b0 && busy_o == 1'b1)
           if ((x_o == x2_i && y_o == y2_i) ||
-              (y_o == `HEIGHT_BITS'd`HEIGHT))
+              (y_o >= `HEIGHT_BITS'd`HEIGHT-1) ||
+              (x_o >= `WIDTH_BITS'd`WIDTH-1 && y_o == y2_i))
             begin
              done_o <= 1;
               busy_o <= 0;
             end
-          else if (x_o == x2_i || x_o == `WIDTH_BITS'd`WIDTH)
+          else if (x_o == x2_i || x_o >= `WIDTH_BITS'd`WIDTH-1)
            begin
+             if (y2_i > y_o)
+               y_o <= y_o + 1;
+             else
+               y_o <= y_o - 1;
              x_o <= x1_i;
-             y_o <= y_o + 1;
              busy_o <= 1;
            end
          else
            begin
-            x_o <= x_o + 1;
+            if (x2_i > x_o)
+              x_o <= x_o + 1;
+            else
+              x_o <= x_o - 1;
             y_o <= y_o;
             busy_o <= 1;
           end
