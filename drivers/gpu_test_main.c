@@ -10,10 +10,9 @@ int main(void)
     GPUDrawArc(20,320,240,5,255,255,255); //white
     GPUFlush(); //drawing on two
     GPUDrawFilledRect(100,100,50,10, 0,0,255);
-    //drawing on one
     GPUDrawArc(50, 175,175,4,255,255,255);
     GPUDrawLine(0,480, 320, 240, 0, 255, 0);
-    GPUFlush();
+    GPUFlush(); //drawing on one
     GPUDrawCircle(80,200,100, 255,0,255);
 
     return 1;
