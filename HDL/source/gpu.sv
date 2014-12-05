@@ -224,8 +224,8 @@ module gpu
                           .start_i(run_circle_wire),
                           .done_o(finished_circle_wire),
                           .busy_o(circle_busy_wire),
-                          .X_o(),
-                          .Y_o());
+                          .X_o(x_circle_out),
+                          .Y_o(y_circle_out));
                       
   gpu_output_decoder decode(.x_line_i(x_line_out),
                             .y_line_i(y_line_out),
