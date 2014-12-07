@@ -203,9 +203,9 @@ module gpu_fill_circle
 		case (chordstate)
 			3'b000:
 			begin
-				cX1 = `WIDTH_BITS'd`WIDTH;
-				cX2 = `WIDTH_BITS'd`WIDTH;
-				cY = `HEIGHT_BITS'd`HEIGHT;
+				cX1 = xC_i; //`WIDTH_BITS'd`WIDTH;
+				cX2 = xC_i; //`WIDTH_BITS'd`WIDTH;
+				cY = yC_i; //`HEIGHT_BITS'd`HEIGHT;
 			end
 			3'b001:
 				begin
@@ -267,8 +267,8 @@ always_ff @ (posedge clk, negedge n_rst)
 			end
 		else if (chordstate == 3'b000 || chordstate == 3'b101 || chordstate == 3'b110 || chordstate == 3'b111)
 			begin
-				rX <= `WIDTH_BITS'd`WIDTH;
-			  rY <= `HEIGHT_BITS'd`HEIGHT;
+				rX <= xC_i; //`WIDTH_BITS'd`WIDTH;
+			  rY <= yC_i; //`HEIGHT_BITS'd`HEIGHT;
 				
 			end
 		else
