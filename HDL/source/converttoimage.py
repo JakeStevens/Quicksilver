@@ -3,6 +3,7 @@ from PIL import Image
 from intelhex import IntelHex
 import re
 import argparse
+import os
 
 def getframebuffer_sv(filename):
 	pixelData = []
@@ -23,7 +24,7 @@ def getframebuffer_sv(filename):
 	return pixelstobuffer(pixelData)
 
 def getColorChannelSize():
-	with open('../HDL/source/gpu_definitions.vh', 'r') as readFile:
+	with open(os.path.join(os.path.dirname(__file__), 'gpu_definitions.vh'), 'r') as readFile:
 		lines = readFile.read()
 		expr = r'\s+?`define\sCHANNEL_BITS\s(?P<bits>\d+)'
 		match = re.search(expr, lines)
