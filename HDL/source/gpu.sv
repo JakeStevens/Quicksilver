@@ -13,7 +13,7 @@ module gpu
   output wire [3*(`CHANNEL_BITS) - 1:0] rgbdataout_o,
   output wire [`WIDTH_BITS + `HEIGHT_BITS:0] adddataout_o,
   output wire buffer_select_o,
-  output wire fifo_full_o
+  output wire full_change_irq_o
   );
   
   /* FIFO SIGNALS */
@@ -64,6 +64,8 @@ module gpu
  
   wire data_ready;
   wire flush_frame_wire;
+  
+  wire fifo_full;
   
   //TODO: assign x y r g b out through memory controller
   assign x_o = x;
@@ -264,5 +266,10 @@ module gpu
                                   .rgbdataout_o(rgbdataout_o),
 				                          .adddataout_o(adddataout_o),
 				                          .buffer_select_o(buffer_select_o));
+				                          
+  gpu_irq_generator irq_generator(.clk(clk),
+                                  .n_rst(n_rst),
+                                  .signal_i(fifo_full),
+                                  .irq_o(full_change_irq_o));
 
 endmodule
