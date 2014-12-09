@@ -20,7 +20,8 @@ COMPONENT_FILES	:= gpu_output_decoder.sv gpu_apb_interface.sv gpu_draw_line.sv
 COMPONENT_FILES += rise_edge_detect.sv gpu_instruction_decoder.sv
 COMPONENT_FILES += gpu_instruction_fifo.sv gpu_controller.sv gpu_fill_rect.sv
 COMPONENT_FILES += gpu_octantdraw.sv gpu_memcontroller.sv gpu_packlut2.sv
-COMPONENT_FILES += gpu_fill_circle.sv
+COMPONENT_FILES += gpu_fill_circle.sv gpu_irq_generator.sv
+COMPONENT_FILES += edge_detect.sv
 # Specify the name of the top level file (do not include the source folder in the name)
 # NOTE: YOU WILL NEED TO SET THIS VARIABLE'S VALUE WHEN WORKING WITH HEIRARCHICAL DESIGNS
 # AND THE AUTOMATED GRADING SYSTEM
@@ -219,7 +220,7 @@ mapped_tb_%.sv: source/tb_%.sv $(M_WORK_LIB)
 # Simulation Targets
 ##############################################################################
 define CONSOLE_SIM_CMDS
-"run .26 ms;	\
+"run 10 us;	\
  quit -f"
 endef
 
@@ -229,7 +230,7 @@ sim_full_source: $(addprefix $(S_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST
 # Uncomment below if you want to just run the simulation as a console command
 # using the commands listed in the CONSOLE_SIM_CMDS definition above instead of 
 # .do file and have the transcript contents to be saved to a file
-#	@$(SIMULATE) -c -t ps -do $(CONSOLE_SIM_CMDS) $(S_WORK_LIB).$(TB_MODULE) > source.tran
+	@$(SIMULATE) -c -t ps -do $(CONSOLE_SIM_CMDS) $(S_WORK_LIB).$(TB_MODULE) > source.tran
 
 # Uncomment below if you want run the simulation the normal way and have it
 # run the specified .do file
@@ -237,9 +238,9 @@ sim_full_source: $(addprefix $(S_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST
 
 # This way just runs it like normal and only sets up the simulation but doesn't
 # run it or add any waveforms
-	@$(SIMULATE) -i -t ps $(S_WORK_LIB).$(TB_MODULE)
-	@cp -f transcript $(basename $(TOP_LEVEL_FILE)).stran
-	@echo -e "Done simulating the source design\n\n"
+#	@$(SIMULATE) -i -t ps $(S_WORK_LIB).$(TB_MODULE)
+#	@cp -f transcript $(basename $(TOP_LEVEL_FILE)).stran
+#	@echo -e "Done simulating the source design\n\n"
 
 # This rule defines how to simulate the mapped form of the full design
 sim_full_mapped: $(addprefix $(M_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST_BENCH) $(TB_HELPER_FILES)))
@@ -255,9 +256,9 @@ sim_full_mapped: $(addprefix $(M_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST
 
 # This way just runs it like normal and only sets up the simulation but doesn't
 # run it or add any waveforms
-	#@$(SIMULATE) -i -t ps $(M_WORK_LIB).$(TB_MODULE)
-	#@cp -f transcript $(basename $(TOP_LEVEL_FILE)).mtran
-	#@echo -e "Done simulating the mapped design\n\n"
+#	@$(SIMULATE) -i -t ps $(M_WORK_LIB).$(TB_MODULE)
+#	@cp -f transcript $(basename $(TOP_LEVEL_FILE)).mtran
+#	@echo -e "Done simulating the mapped design\n\n"
 
 # Define a pattern rule for simulating the source version of individual files	without a testbench
 sim_%_source: $(S_WORK_LIB)/%
