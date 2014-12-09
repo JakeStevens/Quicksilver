@@ -18,6 +18,7 @@ module tb_gpu();
   reg [3*(`CHANNEL_BITS) - 1:0] tb_rgbdataout_o;
   reg [`WIDTH_BITS + `HEIGHT_BITS:0] tb_adddataout_o;
   reg tb_buff_sel;
+  reg tb_irq;
   integer File1, File2;
   
   
@@ -27,7 +28,7 @@ module tb_gpu();
               .UB_o(tb_UB_o), .ZZ_o(tb_ZZ_o), .SEM_o(tb_SEM_o), .OE_o(tb_OE_o),
               .rgbdataout_o(tb_rgbdataout_o), .adddataout_o(tb_adddataout_o),
 	      .buffer_select_o(tb_buff_sel),
-	      .fifo_full_o(tb_fifo_full_o));
+	      .full_change_irq_o(tb_irq));
               
     always
     begin
@@ -35,6 +36,16 @@ module tb_gpu();
       #(CLK_PERIOD/2.0);
       tb_clk = 1'b1;
       #(CLK_PERIOD/2.0);
+    end
+    
+    always @(posedge tb_clk, negedge tb_n_rst)
+    begin
+      if (!tb_n_rst)
+        tb_fifo_full_o <= 1'b0;
+      else if (tb_irq == 1'b1)
+        tb_fifo_full_o <= !tb_fifo_full_o;
+      else if (tb_irq == 1'b0)
+        tb_fifo_full_o <= tb_fifo_full_o;
     end
     
     always
@@ -55,6 +66,7 @@ module tb_gpu();
     
     initial
     begin
+      tb_fifo_full_o = 0;
       File1 = $fopen("tb_output1.txt");
       File2 = $fopen("tb_output2.txt");
         if (!File1 || !File2)

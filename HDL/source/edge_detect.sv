@@ -13,8 +13,8 @@ module edge_detect
   begin
     if (1'b0 == n_rst)
       begin
-        flip1 <= 1;
-        flip2 <= 1;
+        flip1 <= 0;
+        flip2 <= 0;
       end
     else
       begin

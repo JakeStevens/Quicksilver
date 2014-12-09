@@ -119,7 +119,7 @@ module gpu
                             .write_enable_i(w_en_wire),
                             .pop_instruction_i(pop_wire),
                             .fifo_empty_o(empty_wire),
-                            .fifo_full_o(fifo_full_o),
+                            .fifo_full_o(fifo_full),
                             .opcode_o(op_wire),
                             .x1_o(x1_o_wire),
                             .y1_o(y1_o_wire),
