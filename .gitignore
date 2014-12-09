@@ -17,3 +17,12 @@ HDL/source/*.bak
 HDL/*.log
 HDL/*.mtran
 HDL/*.stran
+HDL/*.txt
+HDL/*.jpg
+drivers/*.out
+HDL/default.svf
+HDL/gpu.mcomp
+HDL/mapped.tran
+HDL/mapped_work/
+transcript
+drivers/transcript
