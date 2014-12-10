@@ -12,9 +12,9 @@
 #define DISP_Y_WIDTH 9
 
 //Color bit widths
-#define GPU_R_WIDTH 8
-#define GPU_G_WIDTH 8
-#define GPU_B_WIDTH 8
+#define GPU_R_WIDTH 1
+#define GPU_G_WIDTH 1
+#define GPU_B_WIDTH 1
 
 //Instruction set
 #define GPU_CMD_RESET 0
@@ -42,13 +42,15 @@
 #define GPU_INST_PARAM(param, shift) ((uint32_t)param) << shift
 #define GPU_INST_XY(x,y) (GPU_INST_PARAM(y, GPU_POS_Y) | \
                           GPU_INST_PARAM(x, GPU_POS_X))
-#define GPU_INST_COLOR(r,g,b) (GPU_INST_PARAM(r, GPU_POS_R) | \
-                               GPU_INST_PARAM(g, GPU_POS_G) | \
-                               GPU_INST_PARAM(b, GPU_POS_B))
+#define GPU_INST_COLOR(r,g,b) (GPU_INST_PARAM((r & (2<<(GPU_R_WIDTH-1))-1), GPU_POS_R) | \
+                               GPU_INST_PARAM((g & (2<<(GPU_G_WIDTH-1))-1), GPU_POS_G) | \
+                               GPU_INST_PARAM((b & (2<<(GPU_B_WIDTH-1))-1), GPU_POS_B))
+
 #define GPU_INST_ARC(oct,r,g,b) (GPU_INST_PARAM(oct, GPU_POS_OCT) | \
-                                GPU_INST_PARAM(r, GPU_POS_R) | \
-                                GPU_INST_PARAM(g, GPU_POS_G) | \
-                                GPU_INST_PARAM(b, GPU_POS_B))
+                                GPU_INST_PARAM((r & (2<<(GPU_R_WIDTH-1))-1), GPU_POS_R) | \
+                                GPU_INST_PARAM((g & (2<<(GPU_G_WIDTH-1))-1), GPU_POS_G) | \
+                                GPU_INST_PARAM((b & (2<<(GPU_B_WIDTH-1))-1), GPU_POS_B))
+
 #define GPU_INST_RADIUS(r) GPU_INST_PARAM(r, GPU_POS_RAD)
 
 //Issue instruction

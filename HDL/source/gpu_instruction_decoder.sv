@@ -69,7 +69,7 @@ module gpu_instruction_decoder
       
   end
   
-  always
+  always_comb
   begin: outputLogic
     opcode_o_n = opcode_o;
     x1_o_n = x1_o;
@@ -147,10 +147,10 @@ module gpu_instruction_decoder
             begin
               //draw arc
               b_o_n = parameters_i[`CHANNEL_BITS-1:0];
-              g_o_n = parameters_i[2*`CHANNEL_BITS:`CHANNEL_BITS];
+              g_o_n = parameters_i[2*`CHANNEL_BITS-1:`CHANNEL_BITS];
               r_o_n = parameters_i[3*`CHANNEL_BITS-1:2*`CHANNEL_BITS];
               opcode_o_n = opcode_i;
-              oct_o_n = parameters_i[26:24];
+              oct_o_n = parameters_i[3*`CHANNEL_BITS+2:3*`CHANNEL_BITS];
               write_enable_o_n = 1'b1;
               push_instruction_o_n = 1'b1; 
             end
@@ -160,7 +160,21 @@ module gpu_instruction_decoder
               write_enable_o_n = 1'b1;
               push_instruction_o_n = 1'b1;
             end
-              
+          default:
+            begin
+              opcode_o_n = opcode_o;
+              x1_o_n = x1_o;
+              y1_o_n = y1_o;
+              x2_o_n = x2_o;
+              y2_o_n = y2_o;
+              rad_o_n = rad_o;
+              oct_o_n = oct_o;
+              r_o_n = r_o;
+              g_o_n = g_o;
+              b_o_n = b_o;
+              push_instruction_o_n = 0;
+              write_enable_o_n = 0;
+            end
         endcase
       end
   end
