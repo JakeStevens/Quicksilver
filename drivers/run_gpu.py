@@ -26,7 +26,7 @@ def compile_and_run():
     subprocess.call(["rm", "../HDL/tb_output1.txt", "../HDL/tb_output2.txt"])
     subprocess.call(["rm", "tb_output1.txt.jpg", "tb_output2.txt.jpg"])
     print("Compiling./H driver code...")
-    err = subprocess.call(["gcc", "gpu_test_main.c"])
+    err = subprocess.call(["gcc", "gpu_test_large.c"])
     if err == 1:
         print("Compile Error. Run aborted...")
         return
