@@ -220,7 +220,7 @@ mapped_tb_%.sv: source/tb_%.sv $(M_WORK_LIB)
 # Simulation Targets
 ##############################################################################
 define CONSOLE_SIM_CMDS
-"run 10 us;	\
+"run -all;	\
  quit -f"
 endef
 
