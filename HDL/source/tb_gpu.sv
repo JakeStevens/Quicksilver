@@ -18,7 +18,11 @@ module tb_gpu();
   reg [3*(`CHANNEL_BITS) - 1:0] tb_rgbdataout_o;
   reg [`WIDTH_BITS + `HEIGHT_BITS:0] tb_adddataout_o;
   reg tb_buff_sel;
-  integer File1, File2;
+  reg tb_irq;
+  reg tb_new_frame;
+  string filename;
+  integer i;
+  integer File;//1, File2;
   
   
   gpu DUT(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
@@ -26,12 +30,13 @@ module tb_gpu();
               .CE1_o(tb_CE1_o), .CE0_o(tb_CE0_o), .LB_o(tb_LB_o), .R_W_o(tb_R_W_o),
               .UB_o(tb_UB_o), .ZZ_o(tb_ZZ_o), .SEM_o(tb_SEM_o), .OE_o(tb_OE_o),
               .rgbdataout_o(tb_rgbdataout_o), .adddataout_o(tb_adddataout_o),
-<<<<<<< Updated upstream
-	      .buffer_select_o(tb_buff_sel));
-=======
 	      .buffer_select_o(tb_buff_sel),
-	      .fifo_full_o(tb_fifo_full_o));
->>>>>>> Stashed changes
+	      .full_change_irq_o(tb_irq));
+	      
+	edge_detect buff_edge(.clk(tb_clk),
+	                      .n_rst(tb_n_rst),
+	                      .data_i(tb_buff_sel),
+	                      .edge_found_o(tb_new_frame));      
               
     always
     begin
@@ -41,30 +46,48 @@ module tb_gpu();
       #(CLK_PERIOD/2.0);
     end
     
+    always @(posedge tb_clk, negedge tb_n_rst)
+    begin
+      if (!tb_n_rst)
+        tb_fifo_full_o <= 1'b0;
+      else if (tb_irq == 1'b1)
+        tb_fifo_full_o <= !tb_fifo_full_o;
+      else if (tb_irq == 1'b0)
+        tb_fifo_full_o <= tb_fifo_full_o;
+    end
+    
+    
     always
     begin
       @ (posedge tb_clk);
       if(tb_R_W_o == 1'b0)
         begin
-          if (File1 && File2)
-            begin
-              if (tb_buff_sel == 1'b0)
-	        $fdisplay(File1, "%d,%d", tb_adddataout_o, tb_rgbdataout_o);
-              else
-		$fdisplay(File2, "%d,%d", tb_adddataout_o, tb_rgbdataout_o);
-	      $display("%d,%d", tb_adddataout_o, tb_rgbdataout_o);
-            end
-          end
+          $fdisplay(File, "%d,%d", tb_adddataout_o, tb_rgbdataout_o);
+        end
+    end
+    
+    always @(posedge tb_clk, negedge tb_n_rst)
+    begin
+      if (tb_n_rst == 1'b0)
+        begin
+          i = 0;
+          $sformat(filename, "tb_output%0d.txt", i);
+          File = $fopen(filename, "w");
+        end
+      else if (tb_new_frame == 1'b1)
+        begin
+          $fclose(File);
+          i = i + 1;
+          $sformat(filename, "tb_output%0d.txt", i);
+          File = $fopen(filename, "w");
+        end
+      else
+        i = i;
     end
     
     initial
     begin
-      File1 = $fopen("tb_output1.txt");
-      File2 = $fopen("tb_output2.txt");
-        if (!File1 || !File2)
-          $display("A file did not open");
-        else
-          $display("Both files opened");
+      tb_fifo_full_o = 0;
       tb_n_rst = 1'b1;
       tb_n_rst = 1'b0;
       #(CLK_PERIOD);
@@ -76,254 +99,1049 @@ module tb_gpu();
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b0;
       
-      
       @(posedge tb_clk);
       
-<<<<<<< Updated upstream
-      tb_pDataWrite = 32'h300000c8;
-=======
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      
-      tb_pDataWrite = 32'h30000014;
->>>>>>> Stashed changes
+      tb_pDataWrite = 32'h10000000;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-<<<<<<< Updated upstream
-      tb_pDataWrite = 32'h20032140;
-=======
-      tb_pDataWrite = 32'h2003c140;
->>>>>>> Stashed changes
+      tb_pDataWrite = 32'h2000ee95;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-<<<<<<< Updated upstream
-      tb_pDataWrite = 32'h70ffffff;
-=======
-      tb_pDataWrite = 32'h70ff0000;
+      tb_pDataWrite = 32'h50000000;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h30000014;
+      tb_pDataWrite = 32'h10001c0a;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h2003c140;
+      tb_pDataWrite = 32'h20002e1e;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h7100ff00;
+      tb_pDataWrite = 32'h5003f5c0;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h30000014;
+      tb_pDataWrite = 32'h1000c00a;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h2003c140;
+      tb_pDataWrite = 32'h2000d227;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h720000ff;
+      tb_pDataWrite = 32'h5003f5c0;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h30000014;
+      tb_pDataWrite = 32'h10003012;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h2003c140;
+      tb_pDataWrite = 32'h2000be1f;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h73eb1fe4;
+      tb_pDataWrite = 32'h5003f5c0;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h30000014;
+      tb_pDataWrite = 32'h10001c1f;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h2003c140;
+      tb_pDataWrite = 32'h20008c2e;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h74ffff00;
+      tb_pDataWrite = 32'h5003f5c0;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h30000014;
+      tb_pDataWrite = 32'h3000001c;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h2003c140;
+      tb_pDataWrite = 32'h1000542e;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h75ffffff;
+      tb_pDataWrite = 32'h6003f5c0;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h30000014;
+      tb_pDataWrite = 32'h3000000e;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h2003c140;
+      tb_pDataWrite = 32'h1000542e;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h76ff8000;
+      tb_pDataWrite = 32'h60000000;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h30000014;
+      tb_pDataWrite = 32'h1000381c;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h2003c140;
+      tb_pDataWrite = 32'h2000702a;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
-      tb_pDataWrite = 32'h77ff007f;
->>>>>>> Stashed changes
+      tb_pDataWrite = 32'h50000000;
       tb_pSel = 1'b1;
       tb_pEnable = 0'b1;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
       tb_pSel = 1'b1;
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b1;
       #(CLK_PERIOD);
+      tb_pDataWrite = 32'h10001c4e;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h20002e65;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h5003f5c0;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h10001c79;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h20002e90;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h5003f5c0;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h10003053;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h20009860;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h5003f5c0;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000307e;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000988b;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h5003f5c0;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h3000001c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h10009a6f;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h6003f5c0;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h3000000e;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h10009a6f;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h60000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h10005e61;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000987d;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000381c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000702a;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000381c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000702a;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000381c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000702a;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000381c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000702a;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000381c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000702a;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000381c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000702a;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000381c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000702a;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h1000381c;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h2000702a;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
+      @(posedge tb_clk);
+      #(0.5);
+      tb_pSel = 1'b1;
+      tb_pEnable = 1'b0;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      tb_pDataWrite = 32'h50000000;
+      tb_pSel = 1'b1;
+      tb_pEnable = 0'b1;
+      tb_pWrite = 1'b1;
+      #(CLK_PERIOD);
+      while(tb_fifo_full_o == 1'b1)
+      begin
+      #(CLK_PERIOD);
+      end
 
       
-      //Update this based on how many items are drawn
-      //Basically, everything must be drawn before you close
-<<<<<<< Updated upstream
-      #(CLK_PERIOD * 10000);
-=======
-      #(CLK_PERIOD * 1000000);
->>>>>>> Stashed changes
-      $fclose(File1);
-      $fclose(File2);
-      $display("File closed");
+      while(tb_fifo_full_o == 1'b1) begin
+      end
+      $finish;
+     
     end
   
   

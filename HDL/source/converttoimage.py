@@ -31,7 +31,7 @@ def getColorChannelSize():
 		return int(match.group('bits'))
 		
 def pixelstobuffer(pixelData):
-	frameBuffer = [(0,0,0) for y in range(480) for x in range(640)]
+	frameBuffer = [(0,0,0) for y in range(240) for x in range(320)]
 	for pixel in pixelData:
 	
 		if args.unpacked:# or args.hex:
@@ -44,14 +44,14 @@ def pixelstobuffer(pixelData):
 			g = (rgb >> channelsize) & (2**channelsize - 1)
 			r = (rgb >> 2*channelsize) & (2**channelsize - 1)
 
-		if addr >= 480*640:
-			addr = addr - 480*640
+		if addr >= 240*320:
+			addr = addr - 240*320
 			
 		frameBuffer[addr] = (int(r),int(g),int(b))
 	return frameBuffer
 
 def convert(filenamein, filenameout):
-	im = Image.new("RGB", (640,480))
+	im = Image.new("RGB", (320,240))
 	data = getframebuffer_sv(filenamein)
 	im.putdata(data)
 	im.save(filenameout) 

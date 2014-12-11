@@ -26,7 +26,7 @@ module gpu_apb_interface
   
   always_comb
   begin: nextStateLogic
-    nextstate = SETUP;
+    nextstate = state;
     
     case(state)
       SETUP:

@@ -2,7 +2,7 @@
 module gpu_packlut2
   (
   input wire [`HEIGHT_BITS - 1:0] addressy,
-  output wire [`HEIGHT_BITS + `WIDTH_BITS:0] rtpaddy
+  output wire [`HEIGHT_BITS + `WIDTH_BITS -1:0] rtpaddy
   );
   
   reg [`HEIGHT_BITS + `WIDTH_BITS - 1:0] reg_rtpaddy;

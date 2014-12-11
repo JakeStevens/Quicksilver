@@ -1,20 +1,34 @@
 #include "gpu.c"
 
 int main(void)
-{
-    GPUDrawArc(20,320,240,0,255,0,0); //R
-    GPUDrawArc(20,320,240,1,0,255,0); //G
-    GPUDrawArc(20,320,240,2,0,0,255); //B
-    GPUDrawArc(20,320,240,3,235,31,228); //purple 
-    GPUDrawArc(20,320,240,4,255,255,0); //yellow 
-    GPUDrawArc(20,320,240,5,255,255,255); //white
-    GPUFlush(); //drawing on two
-    GPUDrawFilledRect(100,100,50,10, 0,0,255);
-    GPUDrawArc(50, 175,175,4,255,255,255);
-    GPUDrawLine(0,480, 320, 240, 0, 255, 0);
-    GPUFlush(); //drawing on one
-    GPUDrawCircle(80,200,100, 255,0,255);
+{ 
+    GPUDrawFilledRect(0,0,150,120,0,0,0);
 
+    GPUDrawFilledRect(10,14,7+14,10,255,215,0);
+    GPUDrawFilledRect(10,96,30,10,255,215,0);
+    GPUDrawFilledRect(10+8,14+10,14,72,255,215,0);
+    GPUDrawFilledRect(10+21,14,16,57,255,215,0);
+    GPUDrawCircle(28,10+8+28,14+28,255,215,0);
+    GPUDrawCircle(14,10+8+28,14+28,0,0,0);
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
+
+    /* Height is Outer Radius - Inner Radius + Height of Left Side + Height of Block */
+    /* Width is Outer Radius + 10 */
+    GPUDrawFilledRect(111-28-5,77-53-10,10+14,10,255,215,0); //Left Block Atop U
+    GPUDrawFilledRect(111+14-5+1,77-53-10,10+14,10,255,215,0); //Right Block Atop U
+    GPUDrawFilledRect(111-28,77-53,14,53,255,215,0); //Left Side Of U
+    GPUDrawFilledRect(111+14+1,77-53,14,53,255,215,0); //Right Side Of U
+    GPUDrawCircle(28, 111, 77, 255,215,0); // Outer circle to make bottom of U
+    GPUDrawCircle(14, 111, 77, 0, 0, 0); // Inner circle to make bottom of U
+    GPUDrawFilledRect(111-14, 77-30, 2*14+1, 30, 0, 0, 0); //Cover up top half of inner circle
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
+    GPUDrawFilledRect(10+18,28,15,29,0,0,0);
     return 1;
 }	  
 

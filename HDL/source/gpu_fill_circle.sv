@@ -6,17 +6,12 @@ module gpu_fill_circle
   input wire [`WIDTH_BITS - 1:0] xC_i,
   input wire [`HEIGHT_BITS - 1:0] yC_i,
   input wire [`WIDTH_BITS -1:0] rad_i,
-  /*input wire [`CHANNEL_BITS - 1:0] r_i,
-  input wire [`CHANNEL_BITS - 1:0] g_i,
-  input wire [`CHANNEL_BITS - 1:0] b_i,*/
+
   input wire start_i,
   output wire done_o,
   output wire busy_o,
   output wire [`WIDTH_BITS - 1:0] X_o,
-  output wire [`HEIGHT_BITS - 1:0] Y_o/*,
-  output wire [`CHANNEL_BITS-1:0] r_o,
-  output wire [`CHANNEL_BITS-1:0] g_o,
-  output wire [`CHANNEL_BITS-1:0] b_o*/
+  output wire [`HEIGHT_BITS - 1:0] Y_o
   );
   
   reg signed [`WIDTH_BITS - 1:0] Fcontrol;
@@ -32,9 +27,6 @@ module gpu_fill_circle
   reg [`WIDTH_BITS - 1:0] rX, rY, trX, trY, cX1, cX2;//as ry starts from radius
   reg [`HEIGHT_BITS - 1:0] cY;
   
-  /*assign r_o = r_i;
-  assign g_o = g_i;
-  assign b_o = b_i;*/
   assign X_o = rX;
   assign Y_o = rY;
   assign busy_o = reg_busy;

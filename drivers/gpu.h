@@ -8,13 +8,13 @@
 #define GPU_PARAM_WIDTH 25
 
 //Display sizes
-#define DISP_X_WIDTH 10
-#define DISP_Y_WIDTH 9
+#define DISP_X_WIDTH 9
+#define DISP_Y_WIDTH 8
 
 //Color bit widths
-#define GPU_R_WIDTH 8
-#define GPU_G_WIDTH 8
-#define GPU_B_WIDTH 8
+#define GPU_R_WIDTH 6
+#define GPU_G_WIDTH 6
+#define GPU_B_WIDTH 6
 
 //Instruction set
 #define GPU_CMD_RESET 0

@@ -19,11 +19,13 @@ module gpu_memcontroller
   );
   
   reg buffselect;
-  reg [`HEIGHT_BITS + `WIDTH_BITS:0] packaddress, changedaddressy, offset;
+  reg [`HEIGHT_BITS + `WIDTH_BITS:0] packaddress;
+  reg [`HEIGHT_BITS + `WIDTH_BITS - 1:0] changedaddressy, offset;
   reg [3*(`CHANNEL_BITS) - 1:0] rgbpackdata;
   reg regCE1, regCE0, regLB, regR_W, regUB, regSEM, regZZ, regOE;
   
-  gpu_packlut2 packlut(.addressy(adddatay), .rtpaddy(changedaddressy));
+  gpu_packlut packlut(.addressy(adddatay), .rtpaddy(changedaddressy));
+  
   assign adddataout_o = packaddress; 
   assign rgbdataout_o = rgbpackdata;
   assign CE1_o = regCE1;
@@ -49,6 +51,15 @@ module gpu_memcontroller
       begin
         regZZ <= 1'b1;
         regR_W <= 1'b1;
+        /* Following signals are don't cares */
+        /* Signals are opposite of when writing */
+        /* in order to appease model sim */
+        regCE0 <= 1'b0;
+        regSEM <= 1'b0;
+        regCE1 <= 1'b1;
+        regOE <= 1'b1;
+        regUB <= 1'b1;
+        regLB <= 1'b1;
       end
     else if (data_ready_i)
       begin

@@ -27,3 +27,5 @@ HDL/mapped_work/
 transcript
 drivers/transcript
 HDL/*.scomp
+HDL/encounter.log*
+HDL/encounter.cmd*

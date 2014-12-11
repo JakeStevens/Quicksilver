@@ -16,21 +16,12 @@ module gpu_draw_line
   input wire [`HEIGHT_BITS-1:0] y1,
   input wire [`WIDTH_BITS-1:0] x2,
   input wire [`HEIGHT_BITS-1:0] y2,
-  /*
-  input wire [`CHANNEL_BITS-1:0] r_i,
-  input wire [`CHANNEL_BITS-1:0] g_i,
-  input wire [`CHANNEL_BITS-1:0] b_i,
-  */
+
   input wire start,
   output wire done,
   output wire busy,
   output wire [`WIDTH_BITS-1:0] X,
   output wire [`HEIGHT_BITS-1:0] Y
-  /*
-  output wire [`CHANNEL_BITS-1:0] r_o,
-  output wire [`CHANNEL_BITS-1:0] g_o,
-  output wire [`CHANNEL_BITS-1:0] b_o
-  */
   );
   
   reg signed [`WIDTH_BITS+1:0] dx, err, e2;
@@ -40,12 +31,6 @@ module gpu_draw_line
   reg signed [`WIDTH_BITS-1:0] rX;
   reg signed [`HEIGHT_BITS-1:0] rY;
   wire start_edge;
-  
-  /*
-  assign r_o = r_i;
-  assign g_o = g_i;
-  assign b_o = b_i;
-  */
   
   assign X =  rX;
   assign Y = rY;
