@@ -24,9 +24,9 @@ def importsvfromfile():
     outFile.close()
 
 def compile_and_run():
-    subprocess.call(["rm", "../HDL/tb_output*"])
+    subprocess.call(["rm", "../HDL/tb_output*.txt"])
     print("Compiling./H driver code...")
-    err = subprocess.call(["gcc", "gpu_test_large.c"])
+    err = subprocess.call(["gcc", "gpu_test_large.c", "-lm"])
     if err == 1:
         print("Compile Error. Run aborted...")
         return
