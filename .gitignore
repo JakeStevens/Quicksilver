@@ -26,3 +26,4 @@ HDL/mapped.tran
 HDL/mapped_work/
 transcript
 drivers/transcript
+HDL/*.scomp
