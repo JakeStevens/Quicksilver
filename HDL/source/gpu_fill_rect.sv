@@ -37,13 +37,13 @@ module gpu_fill_rect
           end
         else if (start_i == 1'b1 && start_edge == 1'b0 && busy_o == 1'b1)
           if ((x_o == x2_i && y_o == y2_i) ||
-              (y_o >= `HEIGHT_BITS'd`HEIGHT-1) ||
-              (x_o >= `WIDTH_BITS'd`WIDTH-1 && y_o == y2_i))
+              (y_o > `HEIGHT_BITS'd`HEIGHT-1) ||
+              (x_o > `WIDTH_BITS'd`WIDTH-1 && y_o == y2_i))
             begin
              done_o <= 1;
               busy_o <= 0;
             end
-          else if (x_o == x2_i || x_o >= `WIDTH_BITS'd`WIDTH-1)
+          else if (x_o == x2_i || x_o > `WIDTH_BITS'd`WIDTH-1)
            begin
              if (y2_i > y_o)
                y_o <= y_o + 1;
