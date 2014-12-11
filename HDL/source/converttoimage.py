@@ -65,4 +65,4 @@ if __name__ == "__main__":
 	args = parser.parse_args()
   
 	for f in args.files:
-		convert(f, f + '.jpg')
+		convert(f, f + '.png')
