@@ -61,6 +61,7 @@ inline void GPUIssueInstruction(uint32_t inst)
 //    GPU = inst; //Write to address corresponding to GPU
 FILE * file;
 file = fopen("sim.out", "a");
+fprintf(file, "      @(posedge tb_clk);\n");
 fprintf(file, "      #(0.5);\n");
 fprintf(file, "      tb_pSel = 1'b1;\n");
 fprintf(file, "      tb_pEnable = 1'b0;\n");
