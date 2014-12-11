@@ -99,11 +99,12 @@ module tb_gpu();
       tb_pEnable = 1'b0;
       tb_pWrite = 1'b0;
       
-      
       @(posedge tb_clk);
       
 //{insert commands here}
       
+      while(tb_fifo_full_o == 1'b1) begin
+      end
       $finish;
      
     end
