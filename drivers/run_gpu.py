@@ -2,6 +2,7 @@
 
 import subprocess
 import re
+import glob
 
 def importsvfromfile():
     expr = r"//{insert commands here}"
@@ -23,10 +24,9 @@ def importsvfromfile():
     outFile.close()
 
 def compile_and_run():
-    subprocess.call(["rm", "../HDL/tb_output1.txt", "../HDL/tb_output2.txt"])
-    subprocess.call(["rm", "tb_output1.txt.jpg", "tb_output2.txt.jpg"])
+    subprocess.call(["rm", "../HDL/tb_output*"])
     print("Compiling./H driver code...")
-    err = subprocess.call(["gcc", "gpu_test_large.c"])
+    err = subprocess.call(["gcc", "gpu_test_main.c"])
     if err == 1:
         print("Compile Error. Run aborted...")
         return
@@ -38,8 +38,11 @@ def compile_and_run():
     print("Running testbench...")
     subprocess.call(["make", "-C", "../HDL/", "clean", "sim_full_mapped"])
     print("Converting to an image...")
-    subprocess.call(["../HDL/source/converttoimage.py", "../HDL/tb_output1.txt", "../HDL/tb_output2.txt"])
-    print("Images created. Use eog to view tb_output1.txt.jpg and/org tb_output2.txt.jpg...")
+    files = glob.glob("../HDL/tb_output*.txt")
+    for file in files:
+        print("Creating {0}".format(file))
+        subprocess.call(["../HDL/source/converttoimage.py", file])
+    print("Images created. Use eog to view output under ../HDL/")
 
 if __name__ == "__main__":
     compile_and_run()    

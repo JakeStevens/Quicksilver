@@ -19,7 +19,10 @@ module tb_gpu();
   reg [`WIDTH_BITS + `HEIGHT_BITS:0] tb_adddataout_o;
   reg tb_buff_sel;
   reg tb_irq;
-  integer File1, File2;
+  reg tb_new_frame;
+  string filename;
+  integer i;
+  integer File;//1, File2;
   
   
   gpu DUT(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
@@ -29,6 +32,11 @@ module tb_gpu();
               .rgbdataout_o(tb_rgbdataout_o), .adddataout_o(tb_adddataout_o),
 	      .buffer_select_o(tb_buff_sel),
 	      .full_change_irq_o(tb_irq));
+	      
+	edge_detect buff_edge(.clk(tb_clk),
+	                      .n_rst(tb_n_rst),
+	                      .data_i(tb_buff_sel),
+	                      .edge_found_o(tb_new_frame));      
               
     always
     begin
@@ -48,31 +56,38 @@ module tb_gpu();
         tb_fifo_full_o <= tb_fifo_full_o;
     end
     
+    
     always
     begin
       @ (posedge tb_clk);
       if(tb_R_W_o == 1'b0)
         begin
-          if (File1 && File2)
-            begin
-              if (tb_buff_sel == 1'b0)
-	        $fdisplay(File1, "%d,%d", tb_adddataout_o, tb_rgbdataout_o);
-              else
-		$fdisplay(File2, "%d,%d", tb_adddataout_o, tb_rgbdataout_o);
-	      $display("%d,%d", tb_adddataout_o, tb_rgbdataout_o);
-            end
-          end
+          $fdisplay(File, "%d,%d", tb_adddataout_o, tb_rgbdataout_o);
+        end
+    end
+    
+    always @(posedge tb_clk, negedge tb_n_rst)
+    begin
+      if (tb_n_rst == 1'b0)
+        begin
+          i = 0;
+          $sformat(filename, "tb_output%0d.txt", i);
+          File = $fopen(filename, "a+");
+        end
+      else if (tb_new_frame == 1'b1)
+        begin
+          $fclose(File);
+          i = i + 1;
+          $sformat(filename, "tb_output%0d.txt", i);
+          File = $fopen(filename, "a+");
+        end
+      else
+        i = i;
     end
     
     initial
     begin
       tb_fifo_full_o = 0;
-      File1 = $fopen("tb_output1.txt");
-      File2 = $fopen("tb_output2.txt");
-        if (!File1 || !File2)
-          $display("A file did not open");
-        else
-          $display("Both files opened");
       tb_n_rst = 1'b1;
       tb_n_rst = 1'b0;
       #(CLK_PERIOD);
