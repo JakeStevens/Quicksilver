@@ -12,9 +12,9 @@
 #define DISP_Y_WIDTH 9
 
 //Color bit widths
-#define GPU_R_WIDTH 1
-#define GPU_G_WIDTH 1
-#define GPU_B_WIDTH 1
+#define GPU_R_WIDTH 8
+#define GPU_G_WIDTH 8
+#define GPU_B_WIDTH 8
 
 //Instruction set
 #define GPU_CMD_RESET 0

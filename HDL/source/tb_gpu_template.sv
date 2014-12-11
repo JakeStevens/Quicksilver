@@ -72,14 +72,14 @@ module tb_gpu();
         begin
           i = 0;
           $sformat(filename, "tb_output%0d.txt", i);
-          File = $fopen(filename, "a+");
+          File = $fopen(filename, "w");
         end
       else if (tb_new_frame == 1'b1)
         begin
           $fclose(File);
           i = i + 1;
           $sformat(filename, "tb_output%0d.txt", i);
-          File = $fopen(filename, "a+");
+          File = $fopen(filename, "w");
         end
       else
         i = i;
