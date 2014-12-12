@@ -1,0 +1,72 @@
+#include "gpu.c"
+#define GOLD 0xffd700
+#define BLACK 0x000000
+#define WHITE 0xffffff
+#define SPLITCOLOR(color) (color & 0xff0000) >> 16, (color & 0x00ff00) >> 8, (color & 0x0000ff)
+
+inline void DrawQ(uint16_t x, uint16_t y,uint32_t color1, uint32_t color2);
+
+int main(void)
+{
+// first frame with long first instruction
+GPUDrawFilledRect(0,0,320,240,SPLITCOLOR(WHITE));
+//second -8th instruction
+DrawQ(160,120, BLACK, GOLD);
+GPUFlush();
+GPUDrawFilledRect(0,0,320,240,SPLITCOLOR(BLACK));
+GPUDrawArc(100,160,120,0,SPLITCOLOR(WHITE));
+GPUDrawArc(100,160,120,1,SPLITCOLOR(WHITE));
+GPUDrawArc(100,160,120,2,SPLITCOLOR(WHITE));
+GPUDrawArc(100,160,120,3,SPLITCOLOR(WHITE));
+GPUDrawArc(100,160,120,4,SPLITCOLOR(WHITE));
+GPUDrawArc(100,160,120,5,SPLITCOLOR(WHITE));
+GPUDrawArc(100,160,120,6,SPLITCOLOR(WHITE));
+GPUDrawArc(100,160,120,7,SPLITCOLOR(WHITE));
+
+GPUDrawArc(15,185,95,0,SPLITCOLOR(WHITE));
+GPUDrawArc(15,185,95,1,SPLITCOLOR(WHITE));
+GPUDrawArc(15,185,95,2,SPLITCOLOR(WHITE));
+GPUDrawArc(15,185,95,3,SPLITCOLOR(WHITE));
+GPUDrawArc(15,185,95,4,SPLITCOLOR(WHITE));
+GPUDrawArc(15,185,95,5,SPLITCOLOR(WHITE));
+GPUDrawArc(15,185,95,6,SPLITCOLOR(WHITE));
+GPUDrawArc(15,185,95,7,SPLITCOLOR(WHITE));
+
+GPUDrawArc(15,135,95,0,SPLITCOLOR(WHITE));
+GPUDrawArc(15,135,95,1,SPLITCOLOR(WHITE));
+GPUDrawArc(15,135,95,2,SPLITCOLOR(WHITE));
+GPUDrawArc(15,135,95,3,SPLITCOLOR(WHITE));
+GPUDrawArc(15,135,95,4,SPLITCOLOR(WHITE));
+GPUDrawArc(15,135,95,5,SPLITCOLOR(WHITE));
+GPUDrawArc(15,135,95,6,SPLITCOLOR(WHITE));
+GPUDrawArc(15,135,95,7,SPLITCOLOR(WHITE));
+
+GPUDrawFilledRect(135,140,50,25,SPLITCOLOR(GOLD));
+GPUDrawFilledRect(0,0,1,1,SPLITCOLOR(GOLD));
+GPUDrawFilledRect(0,0,1,1,SPLITCOLOR(GOLD));
+GPUDrawFilledRect(0,0,1,1,SPLITCOLOR(GOLD));
+GPUDrawFilledRect(0,0,1,1,SPLITCOLOR(GOLD));
+GPUDrawFilledRect(0,0,1,1,SPLITCOLOR(GOLD));
+GPUDrawFilledRect(0,0,1,1,SPLITCOLOR(GOLD));
+GPUDrawFilledRect(0,0,1,1,SPLITCOLOR(GOLD));
+GPUDrawFilledRect(0,0,1,1,SPLITCOLOR(GOLD));
+}
+
+
+
+
+inline void DrawQ(uint16_t x, uint16_t y, uint32_t color1, uint32_t color2)
+{
+	GPUDrawCircle(75,x,y,SPLITCOLOR(BLACK));
+	GPUDrawCircle(50,x,y,SPLITCOLOR(GOLD));
+	/*int i;
+	for (i = 0; i <15;i++)
+	{
+		GPUDrawLine(x+10+i, y+20-i,x+60+i,y+65-i, SPLITCOLOR(BLACK));
+	}*/
+	GPUDrawFilledRect(x+10,y+10,15,100,SPLITCOLOR(BLACK));
+	GPUDrawCircle(15,x+8,y+8,SPLITCOLOR(GOLD));
+}
+
+
+
