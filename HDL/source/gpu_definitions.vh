@@ -20,7 +20,7 @@
 
 //Define the number of bits used for a single color channel
 `ifndef CHANNEL_BITS
-  `define CHANNEL_BITS 6
+  `define CHANNEL_BITS 8
 `endif
 
 //Define the number of bits used for the X+Y coord (log2 of HEIGHT*Width)

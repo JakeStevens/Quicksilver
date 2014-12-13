@@ -36,7 +36,7 @@ def pixelstobuffer(pixelData):
 	
 		if args.unpacked:# or args.hex:
 			x,y,r,g,b = [int(z) for z in pixel]
-			addr = y*640 + x
+			addr = y*320 + x
 		else:
 			addr,rgb = [int(z) for z in pixel]
 			channelsize = getColorChannelSize()

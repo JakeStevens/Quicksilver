@@ -226,7 +226,7 @@ endef
 
 # This rule defines how to simulate the source form of the full design
 sim_full_source: $(addprefix $(S_WORK_LIB)/, $(basename $(TOP_LEVEL_FILE) $(TEST_BENCH) $(TB_HELPER_FILES) $(COMPONENT_FILES)))
-	@echo -e "Simulating Source Design"
+#	@echo -e "Simulating Source Design"
 # Uncomment below if you want to just run the simulation as a console command
 # using the commands listed in the CONSOLE_SIM_CMDS definition above instead of 
 # .do file and have the transcript contents to be saved to a file
