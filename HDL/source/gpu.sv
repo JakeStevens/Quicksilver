@@ -1,3 +1,10 @@
+// File name:   gpu.sv
+// Created:     12/15/2014
+// Author:      Manik Singhal Jake Stevens Erik Swan
+// Lab Section: 337-04
+// Version:     1.0  ECE337 Final Project Version
+// Description: Top level GPU file
+
 `include "source/gpu_definitions.vh"
 
 module gpu

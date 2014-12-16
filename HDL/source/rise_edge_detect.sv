@@ -1,4 +1,3 @@
-// $Id: $
 // File name:   rise_edge_detect.sv
 // Created:     11/2/2014
 // Author:      Jacob Stevens

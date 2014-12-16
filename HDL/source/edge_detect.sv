@@ -1,3 +1,10 @@
+// File name:   edge_detect.sv
+// Created:     12/6/2014
+// Author:      Manik Singhal Jake Stevens Erik Swan
+// Lab Section: 337-04
+// Version:     1.0  ECE337 Final Project Version
+// Description: An edge detector that does not discriminate H->L or L->H
+
 module edge_detect
   (
   input wire clk,

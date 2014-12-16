@@ -1,3 +1,10 @@
+// File name:   gpu_instruction_decoder.sv
+// Created:     12/15/2014
+// Author:      Manik Singhal Jake Stevens Erik Swan
+// Lab Section: 337-04
+// Version:     1.0  ECE337 Final Project Version
+// Description: Decodes instructions sent via APB bus from core
+
 `include "source/gpu_definitions.vh"
 
 module gpu_instruction_decoder

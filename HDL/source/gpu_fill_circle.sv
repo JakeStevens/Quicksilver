@@ -1,3 +1,10 @@
+// File name:   gpu_fill_circle.sv
+// Created:     12/15/2014
+// Author:      Manik Singhal Jake Stevens Erik Swan
+// Lab Section: 337-04
+// Version:     1.0  ECE337 Final Project Version
+// Description: Draw filled circle using derivative of Bresenham's
+
 `include "source/gpu_definitions.vh"
 module gpu_fill_circle
 (

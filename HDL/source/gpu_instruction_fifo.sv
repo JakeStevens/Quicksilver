@@ -1,3 +1,10 @@
+// File name:   gpu_instruction_fifo.sv
+// Created:     12/15/2014
+// Author:      Manik Singhal Jake Stevens Erik Swan
+// Lab Section: 337-04
+// Version:     1.0  ECE337 Final Project Version
+// Description: Stores opcode and all associated parameters
+
 `include "source/gpu_definitions.vh"
 
 module gpu_instruction_fifo
