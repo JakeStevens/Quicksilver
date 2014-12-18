@@ -42,7 +42,7 @@ module tb_gpu_fill_rect();
       begin
         if (File)
           begin
-            $fdisplay(File, "%d,%d", tb_x_o, tb_y_o,);
+            $fdisplay(File, "%d,%d,%d,%d,%d", tb_x_o, tb_y_o,255,255,255);
             $display("%d,%d", tb_x_o, tb_y_o);
           end
       end

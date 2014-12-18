@@ -8,15 +8,19 @@ module tb_gpu_fill_circle();
   reg [`WIDTH_BITS-1:0] tb_xC_i, tb_X_o;
   reg [`HEIGHT_BITS-1:0] tb_yC_i, tb_Y_o;
   reg [`WIDTH_BITS-1:0] tb_rad_i; 
-  reg [`CHANNEL_BITS-1:0] tb_r, tb_r_o;
-  reg [`CHANNEL_BITS-1:0] tb_g, tb_g_o;
-  reg [`CHANNEL_BITS-1:0] tb_b, tb_b_o;
+
   integer File; 
   
-	gpu_fill_circle circle(.clk(tb_clk), .n_rst(tb_n_rst),.xC(tb_xC_i),.yC(tb_yC_i),
-                      .rad(tb_rad_i), .r_i(tb_r), .g_i(tb_g), .b_i(tb_b), 
-                      .start(tb_start_i), .done(tb_done_o), .busy(tb_busy_o),
-                      .X(tb_X_o), .Y(tb_Y_o), .r_o(tb_r_o), .g_o(tb_g_o), .b_o(tb_b_o));
+	gpu_fill_circle circle(.clk(tb_clk),
+	                       .n_rst(tb_n_rst),
+	                       .xC_i(tb_xC_i),
+	                       .yC_i(tb_yC_i),
+                        .rad_i(tb_rad_i),
+                        .start_i(tb_start_i),
+                        .done_o(tb_done_o),
+                        .busy_o(tb_busy_o),
+                        .X_o(tb_X_o),
+                        .Y_o(tb_Y_o));
                       
   
   
@@ -37,7 +41,7 @@ module tb_gpu_fill_circle();
       begin
         if (File)
           begin
-            $fdisplay(File, "%d,%d,%d,%d,%d", tb_X_o, tb_Y_o, tb_r_o, tb_g_o, tb_b_o);
+            $fdisplay(File, "%d,%d,%d,%d,%d", tb_X_o, tb_Y_o, 255, 255, 255);
             $display("%d,%d,%d,%d,%d", tb_X_o, tb_Y_o, tb_r, tb_g, tb_b);
           end
       end
@@ -56,9 +60,6 @@ module tb_gpu_fill_circle();
     tb_n_rst = 1'b1;
     tb_n_rst = 1'b1;
     tb_n_rst = 1'b0;
-    tb_r = `CHANNEL_BITS'd255;
-    tb_g = `CHANNEL_BITS'd255;
-    tb_b = `CHANNEL_BITS'd255;
     tb_start_i = 0;
     #(CLK_PERIOD);
     tb_n_rst = 1'b1;
