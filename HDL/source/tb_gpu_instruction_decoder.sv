@@ -28,7 +28,7 @@ module tb_gpu_instruction_decoder();
   reg tb_push;
   reg tb_w_en;
   
-  apbgpu apb(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
+  gpu_apb_interface apb(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
               .pSel_i(tb_pSel), .pEnable_i(tb_pEnable), .pWrite_i(tb_pWrite),
               .opcode_o(tb_opcode), .parameters_o(tb_parameters), .command_o(tb_command));
               
