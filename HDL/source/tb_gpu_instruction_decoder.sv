@@ -22,6 +22,7 @@ module tb_gpu_instruction_decoder();
   reg [`WIDTH_BITS-1:0] tb_x2;
   reg [`HEIGHT_BITS-1:0] tb_y2;
   reg [`WIDTH_BITS-1:0] tb_rad;
+  reg [2:0] tb_oct;
   reg [`CHANNEL_BITS-1:0] tb_r;
   reg [`CHANNEL_BITS-1:0] tb_g;
   reg [`CHANNEL_BITS-1:0] tb_b;
@@ -32,10 +33,22 @@ module tb_gpu_instruction_decoder();
               .pSel_i(tb_pSel), .pEnable_i(tb_pEnable), .pWrite_i(tb_pWrite),
               .opcode_o(tb_opcode), .parameters_o(tb_parameters), .command_o(tb_command));
               
-  gpu_instruction_decoder DUT(.opcode_i(tb_opcode), .parameters_i(tb_parameters), .command_i(tb_command),
-                              .x1_o(tb_x1), .y1_o(tb_y1), .x2_o(tb_x2),.y2_o(tb_y2),
-                              .rad_o(tb_rad), .r_o(tb_r), .g_o(tb_g), .b_o(tb_b),
-                              .push_instruction_o(tb_push), .write_enable_o(tb_w_en));                            
+  gpu_instruction_decoder DUT(.clk(tb_clk),
+                              .n_rst(tb_n_rst),
+                              .opcode_i(tb_opcode),
+                              .parameters_i(tb_parameters),
+                              .command_i(tb_command),
+                              .x1_o(tb_x1),
+                              .y1_o(tb_y1),
+                              .x2_o(tb_x2),
+                              .y2_o(tb_y2),
+                              .rad_o(tb_rad),
+                              .oct_o(tb_oct),
+                              .r_o(tb_r),
+                              .g_o(tb_g),
+                              .b_o(tb_b),
+                              .push_instruction_o(tb_push),
+                              .write_enable_o(tb_w_en));                          
               
     always
     begin
