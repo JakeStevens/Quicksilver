@@ -26,13 +26,13 @@ def importsvfromfile():
 def compile_and_run():
     subprocess.call(["rm", "../HDL/tb_output*.txt"])
     print("Compiling./H driver code...")
-    err = subprocess.call(["gcc", "gpu_test_main.c"])
+    err = subprocess.call(["gcc", "../drivers/gpu_test_main.c"])
     if err == 1:
         print("Compile Error. Run aborted...")
         return
-    subprocess.call(["rm", "sim.out"])
+    subprocess.call(["rm", "../drivers/sim.out"])
     print("Generating SystemVerilog code from driver...")
-    subprocess.call(["a.out"])
+    subprocess.call(["../drivers/a.out"])
     print("Importing the code into preexisting testbench...")
     importsvfromfile()
     print("Running testbench...")
