@@ -47,6 +47,9 @@ module tb_gpu_instruction_decoder();
     
     initial
     begin
+      /**** Replace the values for tb_pDataWrite in order to **********
+      ***** test different APB commands		             *********/
+
       tb_n_rst = 1'b1;
       tb_n_rst = 1'b0;
       #(CLK_PERIOD);
