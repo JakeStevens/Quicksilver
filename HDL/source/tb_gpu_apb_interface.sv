@@ -1,5 +1,5 @@
 `timescale 1ns / 10 ps
-module tb_apbgpu();
+module tb_gpu_apb_interface();
   //Define Local Parameters
   localparam CLK_PERIOD = 10;
   
@@ -14,7 +14,7 @@ module tb_apbgpu();
   reg [3:0] tb_opcode;
   reg [24:0] tb_parameters;
   
-  apbgpu DUT(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
+  gpu_apb_interface DUT(.clk(tb_clk), .n_rst(tb_n_rst), .pAddr_i(tb_pAddr), .pDataWrite_i(tb_pDataWrite),
               .pSel_i(tb_pSel), .pEnable_i(tb_pEnable), .pWrite_i(tb_pWrite),
               .opcode_o(tb_opcode), .parameters_o(tb_parameters));
               
@@ -112,7 +112,8 @@ module tb_apbgpu();
       tb_pEnable = 1'b1;
       #(CLK_PERIOD);
       tb_pEnable = 1'b0;
-      //Write again without clearing Select
+      
+      //Write again without clearing Select, mimicking back to back writes
       
       tb_pDataWrite = 32'b00011100011100011100010101010101;
       #(CLK_PERIOD);
