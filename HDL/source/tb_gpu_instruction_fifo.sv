@@ -32,7 +32,7 @@ reg [`WIDTH_BITS-1:0] tb_rad_o;
 reg [`CHANNEL_BITS-1:0] tb_r_o;
 reg [`CHANNEL_BITS-1:0] tb_g_o;
 reg [`CHANNEL_BITS-1:0] tb_b_o;
-reg [2:0] tb_quad_o;
+reg [2:0] tb_oct_o;
 
 // Connect DUT
 gpu_instruction_fifo DUT(
@@ -62,7 +62,7 @@ gpu_instruction_fifo DUT(
   .r_o(tb_r_o),
   .g_o(tb_g_o),
   .b_o(tb_b_o),
-  .quad_o(tb_quad_o)
+  .oct_o(tb_oct_o)
   );
   
 // Setup clock
@@ -86,7 +86,7 @@ initial begin
   tb_r_i = `CHANNEL_BITS'd0;
   tb_g_i = `CHANNEL_BITS'd0;
   tb_b_i = `CHANNEL_BITS'd0;
-  tb_quad_i = 3'd0;
+  tb_oct_i = 3'd0;
   tb_push_instruction = 1'b0;
   tb_write_enable = 1'b0;
   tb_pop_instruction = 1'b0;
@@ -106,7 +106,7 @@ initial begin
   tb_r_i = `CHANNEL_BITS'd32;
   tb_g_i = `CHANNEL_BITS'd32;
   tb_b_i = `CHANNEL_BITS'd32;
-  tb_quad_i = 3'd1;
+  tb_oct_i = 3'd1;
   
   #(CLK_PERIOD);
   
@@ -129,7 +129,7 @@ initial begin
     tb_r_i = `CHANNEL_BITS'd32;
     tb_g_i = `CHANNEL_BITS'd32;
     tb_b_i = `CHANNEL_BITS'd32;
-    tb_quad_i = i;
+    tb_oct_i = i;
     #(CLK_PERIOD);
     tb_write_enable = 1'b0;
     tb_push_instruction = 1'b1;
@@ -162,7 +162,7 @@ initial begin
     tb_r_i = `CHANNEL_BITS'd32;
     tb_g_i = `CHANNEL_BITS'd32;
     tb_b_i = `CHANNEL_BITS'd32;
-    tb_quad_i = i;
+    tb_oct_i = i;
     #(CLK_PERIOD);
     tb_write_enable = 1'b0;
     tb_push_instruction = 1'b1;
