@@ -1,4 +1,3 @@
-// $Id: $
 // File name:   gpu_draw_line.sv
 // Created:     10/9/2014
 // Author:      Manik Singhal Jacob Stevens Erik Swan

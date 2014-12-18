@@ -1,3 +1,10 @@
+// File name:   gpu_irq_generator.sv
+// Created:     12/15/2014
+// Author:      Manik Singhal Jake Stevens Erik Swan
+// Lab Section: 337-04
+// Version:     1.0  ECE337 Final Project Version
+// Description: Generates an IRQ on every  edge detect 
+
 module gpu_irq_generator
   (
   input wire clk,
