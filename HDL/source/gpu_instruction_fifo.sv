@@ -43,10 +43,23 @@ localparam FIFO_MAX_BIT = FIFO_WIDTH - 1;
 localparam FIFO_DEPTH = 8;
 localparam FIFO_POINTER_BITS = 3; //log(2, 8) 
 
-reg [FIFO_MAX_BIT:0] input_data, output_data;
+reg [FIFO_MAX_BIT:0] input_data;
 reg [FIFO_DEPTH-1:0][FIFO_MAX_BIT:0] data;
 reg [FIFO_POINTER_BITS-1:0] read_ptr, write_ptr;
 reg [FIFO_POINTER_BITS:0] depth_cntr;
+
+struct packed {
+  reg [3:0] opcode;
+  reg [`WIDTH_BITS-1:0] x1;
+  reg [`HEIGHT_BITS-1:0] y1;
+  reg [`WIDTH_BITS-1:0] x2;
+  reg [`HEIGHT_BITS-1:0] y2;
+  reg [`WIDTH_BITS-1:0] rad;
+  reg [`CHANNEL_BITS-1:0] r;
+  reg [`CHANNEL_BITS-1:0] g;
+  reg [`CHANNEL_BITS-1:0] b;
+  reg [2:0] oct;
+} output_data;
 
 reg fifo_full;
 /* The outward fifo full signal will be less than the actual full
@@ -60,18 +73,17 @@ always_comb begin
   input_data = {oct_i, b_i, g_i, r_i, rad_i, y2_i, x2_i, y1_i, x1_i, opcode_i};
   // Reading from FIFO
   output_data = data[read_ptr][FIFO_MAX_BIT:0];
-  
-  opcode_o = output_data[3:0]; // [3:0]
-  x1_o = output_data[3+`WIDTH_BITS:3+1]; // [13:4]
-  y1_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS+1:`WIDTH_BITS-1+3+2]; //[22:14]
-  x2_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS+2:`WIDTH_BITS-1+`HEIGHT_BITS-1+3+3]; //[32:23]
-  y2_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS+3:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+3+4]; //[41:33]
-  rad_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS+4:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+3+5]; //[51:42]
-  r_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS+5:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+3+6]; //[59:52]
-  g_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS+6:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+3+7]; // [67:60]
-  b_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS+7:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3+8]; //[75:68]
-  oct_o = output_data[3+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+1+10:`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`HEIGHT_BITS-1+`WIDTH_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+`CHANNEL_BITS-1+3+9]; //[78:76]
-  
+  opcode_o = output_data.opcode;
+  x1_o = output_data.x1;
+  y1_o = output_data.y1;
+  x2_o = output_data.x2;
+  y2_o = output_data.y2;
+  rad_o = output_data.rad;
+  r_o = output_data.r;
+  g_o = output_data.g;
+  b_o = output_data.b;
+  oct_o = output_data.oct;
+
   // FIFO flags
   fifo_empty_o = (depth_cntr == 0);
   fifo_full = (depth_cntr == 4'd8);
